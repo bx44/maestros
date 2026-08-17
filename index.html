@@ -6,192 +6,259 @@
 <title>Or Barak — Maestros</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#14213D">
+<meta name="theme-color" content="#29235C">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Or Barak">
 <link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;600;700&family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#14213D; --ink-2:#4A5578; --paper:#EEF1F5; --card:#FFFFFF;
-    --line:#D7DCE5; --accent:#0F6E6E; --accent-d:#0A5252;
-    --ok:#1B7F5A; --warn:#A9670B; --bad:#A62A22; --late:#7A5AA6;
+    --navy:#29235C; --navy-d:#1D1940; --navy-soft:#9A94C0; --navy-line:#C6C2DC;
+    --gold:#C99B52; --gold-d:#8E6A2E; --gold-bg:#F9F2E4;
+    --paper:#F3F2F8; --ink:#212322; --ink-2:#3E4140; --muted:#656263; --muted-2:#747779;
+    --line:#D5D6D7; --line-2:#EBECEC; --bad:#8C3A32; --gris:#F6F6F5;
+    --core:'Mulish',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    --cond:'Barlow Condensed',var(--core);
+    --tech:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --sombra:0 1px 2px rgba(33,35,34,.06);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
   html,body{margin:0; padding:0}
-  body{
-    background:var(--paper); color:var(--ink);
-    font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-    padding-bottom:96px;
-  }
-  .wrap{max-width:560px; margin:0 auto; padding:0 14px}
-  h1,h2,h3{margin:0; letter-spacing:-0.02em}
-  .muted{color:var(--ink-2); font-size:13px}
+  body{background:var(--paper); color:var(--ink); font:400 16px/1.5 var(--core); padding-bottom:120px}
+  h1,h2,h3{margin:0}
+  #app-shell{max-width:430px; margin:0 auto; background:#fff; min-height:100vh;
+             border-left:1px solid var(--line); border-right:1px solid var(--line)}
+  .wrap{padding:0 20px}
 
-  header{background:var(--ink); color:#fff; padding:calc(14px + env(safe-area-inset-top)) 0 0}
-  .barra{padding-bottom:calc(14px + env(safe-area-inset-bottom)) !important}
-  #sin-red{display:none; background:var(--warn); color:#fff; font-size:13px; text-align:center; padding:7px 10px}
-  #sin-red.on{display:block}
-  header .wrap{display:flex; align-items:baseline; justify-content:space-between}
-  header h1{font-size:17px; font-weight:700}
-  header .quien{font-size:12px; color:#A9B4CE}
-  nav{display:flex; gap:2px; margin-top:12px}
-  nav button{
-    flex:1; background:transparent; border:0; color:#A9B4CE; font-size:14px; font-weight:600;
-    padding:12px 4px; border-bottom:3px solid transparent; cursor:pointer; font-family:inherit;
-  }
-  nav button.on{color:#fff; border-bottom-color:var(--accent)}
+  /* etiquetas y microtipografía */
+  label,.etq{display:block; font:700 12px/1.2 var(--cond); letter-spacing:.12em;
+             text-transform:uppercase; color:var(--muted); margin:0 0 7px}
+  .etq-mini{font:700 10px/1.2 var(--cond); letter-spacing:.14em; text-transform:uppercase; color:var(--muted-2)}
+  .muted{font:400 12px/1.5 var(--tech); color:var(--muted-2)}
+  .toca{font:700 11px/1.4 var(--cond); letter-spacing:.14em; text-transform:uppercase; color:var(--gold-d)}
 
-  .card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px; margin:14px 0}
-  label{display:block; font-size:12px; font-weight:700; text-transform:uppercase;
-        letter-spacing:.06em; color:var(--ink-2); margin:0 0 6px}
+  /* controles */
   select,input,textarea{
-    width:100%; font:16px/1.4 inherit; color:var(--ink); background:#fff;
-    border:1px solid var(--line); border-radius:9px; padding:12px; font-family:inherit;
+    width:100%; font:400 16px/1.5 var(--core); color:var(--ink); background:#fff;
+    border:1px solid var(--line); border-radius:2px; padding:12px;
   }
   textarea{min-height:76px; resize:vertical}
-  select:focus,input:focus,textarea:focus,button:focus-visible{outline:3px solid #9FD3D3; outline-offset:1px}
-  .campo{margin-bottom:14px}
+  select:focus,input:focus,textarea:focus,button:focus-visible{
+    outline:none; border-color:var(--navy); box-shadow:0 0 0 3px rgba(201,155,82,.45)}
+  .campo{margin-bottom:16px}
   .campo:last-child{margin-bottom:0}
+  #inp-pin{font:400 20px/1.4 var(--tech); letter-spacing:.3em}
 
-  /* Tarjeta del plan: el número de sesión vive en el margen */
-  .plan{display:flex; gap:14px; background:#fff; border:1px solid var(--line);
-        border-left:5px solid var(--accent); border-radius:12px; padding:14px; margin:14px 0}
-  .plan .n{flex:0 0 auto; text-align:center; min-width:44px}
-  .plan .n b{display:block; font-size:30px; line-height:1; font-variant-numeric:tabular-nums}
-  .plan .n span{font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-2)}
-  .plan .t{font-size:17px; font-weight:700; margin-bottom:4px}
-  .plan dl{margin:8px 0 0; font-size:13px}
-  .plan dt{color:var(--ink-2); font-size:11px; text-transform:uppercase; letter-spacing:.06em; margin-top:8px}
-  .plan dd{margin:2px 0 0}
-  .sinplan{border-left-color:var(--warn); background:#FFF8EC}
+  /* encabezados */
+  .hero{background:var(--navy); padding:calc(46px + env(safe-area-inset-top)) 24px 40px;
+        display:flex; flex-direction:column; align-items:center; gap:20px; text-align:center}
+  .hero img{width:56px; display:block}
+  .hero .eyebrow{font:600 12px/1 var(--cond); letter-spacing:.18em; text-transform:uppercase; color:var(--gold)}
+  .hero .titulo{font:300 30px/1.15 var(--core); color:#fff; letter-spacing:.02em; margin-top:10px}
 
-  .seg{display:flex; gap:6px}
-  .seg button{
-    flex:1; padding:11px 4px; font-size:13px; font-weight:700; font-family:inherit;
-    background:#fff; border:1px solid var(--line); border-radius:9px; color:var(--ink-2); cursor:pointer;
+  header{background:var(--navy); padding:calc(16px + env(safe-area-inset-top)) 20px 0}
+  .marca{display:flex; align-items:center; justify-content:space-between; gap:12px}
+  .marca .izq{display:flex; align-items:center; gap:10px}
+  .marca img{width:26px; display:block}
+  .marca .nombre{font:700 15px/1 var(--cond); letter-spacing:.16em; text-transform:uppercase; color:#fff}
+  #btn-salir{display:flex; align-items:center; min-height:44px; padding:0 4px; text-decoration:none;
+             font:700 11px/1 var(--cond); letter-spacing:.14em; text-transform:uppercase; color:var(--navy-line)}
+  #hdr-materia{font:600 20px/1.25 var(--core); color:#fff; margin-top:16px}
+  #hdr-maestro{display:block; font:400 13px/1.5 var(--tech); color:var(--navy-soft); margin-top:2px}
+  nav{display:flex; margin-top:14px}
+  nav button{
+    flex:1; background:transparent; border:0; border-bottom:2px solid transparent; cursor:pointer;
+    font:700 12px/1 var(--cond); letter-spacing:.12em; text-transform:uppercase;
+    color:var(--navy-soft); padding:14px 4px;
   }
-  .seg button.on{background:var(--ink); border-color:var(--ink); color:#fff}
-  .seg.si button.on[data-v="Sí"]{background:var(--ok); border-color:var(--ok)}
-  .seg.si button.on[data-v="Parcial"]{background:var(--warn); border-color:var(--warn)}
+  nav button.on{color:#fff; border-bottom-color:var(--gold)}
+
+  main{padding:18px 20px 20px; display:flex; flex-direction:column; gap:18px}
+
+  /* tarjetas */
+  .card{background:#fff; border:1px solid var(--line); border-radius:4px; padding:16px;
+        box-shadow:var(--sombra); margin:0}
+  .card h3{font:600 16px/1.2 var(--core); color:var(--ink)}
+
+  /* plan de la sesión */
+  .plan{background:#fff; border:1px solid var(--line); border-top:3px solid var(--gold);
+        border-radius:4px; padding:16px; box-shadow:var(--sombra); display:flex; gap:14px; margin:0}
+  .plan .n{flex:0 0 auto; text-align:center; min-width:46px}
+  .plan .n b{display:block; font:300 34px/1 var(--core); color:var(--navy); font-variant-numeric:tabular-nums}
+  .plan .n span{display:block; margin-top:4px; font:700 10px/1.2 var(--cond);
+                letter-spacing:.14em; text-transform:uppercase; color:var(--muted-2)}
+  .plan .t{font:600 17px/1.3 var(--core); color:var(--ink); margin-bottom:4px; text-wrap:pretty}
+  .plan dl{margin:10px 0 0}
+  .plan dt{font:700 10px/1.2 var(--cond); letter-spacing:.14em; text-transform:uppercase;
+           color:var(--muted-2); margin-top:10px}
+  .plan dd{margin:2px 0 0; font-size:14px; line-height:1.5; color:var(--ink-2)}
+  .sinplan{border-top-color:var(--gold-d); background:var(--gold-bg); display:block}
+
+  /* segmentos */
+  .seg{display:flex; gap:8px}
+  .seg button{
+    flex:1; min-height:44px; padding:12px 4px; cursor:pointer; background:#fff;
+    border:1px solid var(--line); border-radius:2px; color:var(--muted);
+    font:700 12px/1 var(--cond); letter-spacing:.12em; text-transform:uppercase;
+  }
+  .seg button.on{background:var(--navy); border-color:var(--navy); color:#fff}
+  .seg.si button.on[data-v="Sí"]{background:var(--navy); border-color:var(--navy)}
+  .seg.si button.on[data-v="Parcial"]{background:var(--gold-d); border-color:var(--gold-d)}
   .seg.si button.on[data-v="No"]{background:var(--bad); border-color:var(--bad)}
 
-  .alumno{padding:12px 0; border-top:1px solid var(--line)}
+  /* asistencia */
+  .cuenta{display:flex; align-items:center; justify-content:space-between; gap:12px; margin:0 0 12px}
+  .cuenta b{font:400 12px/1.4 var(--tech); color:var(--muted-2); font-weight:400}
+  .cuenta button{min-height:44px; padding:12px 14px; background:#fff; border:1px solid var(--navy);
+                 border-radius:2px; color:var(--navy); cursor:pointer;
+                 font:700 11px/1 var(--cond); letter-spacing:.12em; text-transform:uppercase}
+  .alumno{padding:12px 0; border-top:1px solid var(--line-2)}
   .alumno:first-child{border-top:0}
-  .alumno .nm{font-weight:600; font-size:15px; margin-bottom:8px}
-  .mini{display:flex; gap:5px}
+  .alumno .nm{font:600 15px/1.3 var(--core); color:var(--ink); margin-bottom:8px}
+  .mini{display:flex; gap:6px}
   .mini button{
-    flex:1; padding:9px 2px; font-size:12px; font-weight:700; font-family:inherit;
-    background:#fff; border:1px solid var(--line); border-radius:8px; color:var(--ink-2); cursor:pointer;
+    flex:1; min-height:40px; padding:10px 2px; cursor:pointer; background:#fff;
+    border:1px solid var(--line); border-radius:2px; color:var(--muted);
+    font:700 11px/1 var(--cond); letter-spacing:.08em; text-transform:uppercase;
   }
-  .mini button.on[data-v="Asistió"]{background:var(--ok); border-color:var(--ok); color:#fff}
-  .mini button.on[data-v="Retardo"]{background:var(--late); border-color:var(--late); color:#fff}
+  .mini button.on[data-v="Asistió"]{background:var(--navy); border-color:var(--navy); color:#fff}
+  .mini button.on[data-v="Retardo"]{background:var(--gold); border-color:var(--gold); color:#fff}
   .mini button.on[data-v="Falta"]{background:var(--bad); border-color:var(--bad); color:#fff}
-  .mini button.on[data-v="Falta justificada"]{background:var(--ink-2); border-color:var(--ink-2); color:#fff}
-  .calif{width:92px; text-align:center; font-variant-numeric:tabular-nums}
+  .mini button.on[data-v="Falta justificada"]{background:var(--muted-2); border-color:var(--muted-2); color:#fff}
+  .calif{width:88px; text-align:center; font:400 16px/1.4 var(--tech)}
 
-  .barra{position:fixed; left:0; right:0; bottom:0; background:rgba(238,241,245,.96);
-         border-top:1px solid var(--line); padding:10px 0 14px; backdrop-filter:blur(6px)}
-  .cta{width:100%; padding:15px; font-size:16px; font-weight:700; font-family:inherit;
-       background:var(--accent); color:#fff; border:0; border-radius:11px; cursor:pointer}
-  .cta:active{background:var(--accent-d)}
-  .cta[disabled]{background:#9AA6BE; cursor:default}
+  /* progreso */
+  .barraprog{height:4px; background:var(--line-2); overflow:hidden; margin-top:12px}
+  .barraprog i{display:block; height:100%; background:var(--gold); transition:width .3s ease}
 
-  .aviso{padding:12px 14px; border-radius:10px; font-size:14px; margin:14px 0}
-  .aviso.ok{background:#E4F3EC; color:#14603F; border:1px solid #B4DCC8}
-  .aviso.err{background:#FBEAE8; color:#8C221B; border:1px solid #EFC3BE}
-  .aviso.info{background:#FFF8EC; color:#7A4B06; border:1px solid #F0DCB4}
+  /* barra inferior */
+  .barra{position:fixed; left:0; right:0; bottom:0; display:flex; justify-content:center; pointer-events:none}
+  .barra > div{width:100%; max-width:430px; background:rgba(255,255,255,.97); pointer-events:auto;
+               border-top:1px solid var(--line); padding:12px 20px calc(16px + env(safe-area-inset-bottom));
+               display:flex; flex-direction:column; gap:8px}
+  .barra .resumen{display:flex; align-items:center; justify-content:space-between; gap:12px;
+                  font:400 12px/1.4 var(--tech); color:var(--muted-2)}
+  .barra .resumen span:last-child{color:var(--gold-d)}
+  .cta{width:100%; min-height:48px; padding:15px; border:0; border-radius:2px; cursor:pointer;
+       background:var(--navy); color:#fff;
+       font:700 13px/1 var(--cond); letter-spacing:.14em; text-transform:uppercase;
+       transition:background 140ms cubic-bezier(.4,0,.2,1)}
+  .cta:active{opacity:.88}
+  .cta[disabled]{background:#8B87A8; cursor:default}
+  .cta.linea{background:#fff; border:1px solid var(--navy); color:var(--navy)}
 
+  /* avisos */
+  .aviso{background:var(--gris); border-top:3px solid var(--muted-2); padding:12px 14px;
+         font-size:14px; line-height:1.5; color:var(--ink-2)}
+  .aviso.err{border-top-color:var(--bad)}
+  .aviso.info{border-top-color:var(--gold-d)}
+  .aviso.ok{border-top-color:var(--navy)}
+
+  /* temario */
   .lista-t{list-style:none; margin:0; padding:0}
-  .lista-t li{display:flex; gap:10px; align-items:flex-start; padding:11px 0; border-top:1px solid var(--line)}
+  .lista-t li{display:flex; gap:12px; align-items:flex-start; padding:13px 0; border-top:1px solid var(--line-2)}
   .lista-t li:first-child{border-top:0}
-  .lista-t .est{flex:0 0 auto; font-size:11px; font-weight:700; padding:3px 7px; border-radius:20px; margin-top:2px}
-  .est.dada{background:#E4F3EC; color:#14603F}
-  .est.pend{background:#EEF1F5; color:var(--ink-2)}
-  .lista-t .tt{font-size:15px; font-weight:600}
-  .vacio{text-align:center; color:var(--ink-2); font-size:14px; padding:26px 10px}
+  .lista-t .est{flex:0 0 auto; padding:4px 8px; border-radius:2px;
+                font:700 10px/1.2 var(--cond); letter-spacing:.12em; text-transform:uppercase}
+  .est.dada{background:var(--navy); color:#fff}
+  .est.pend{background:var(--gris); color:var(--muted-2); border:1px solid var(--line)}
+  .lista-t .tt{font:600 15px/1.35 var(--core); color:var(--ink); text-wrap:pretty}
+  .vacio{text-align:center; color:var(--muted-2); font-size:14px; line-height:1.6; padding:26px 10px}
+
+  /* éxito */
+  .exito{border-top:3px solid var(--gold); text-align:center; padding:36px 22px}
+  .exito img{width:48px; display:block; margin:0 auto 14px}
+  .exito h2{font:600 22px/1.25 var(--core); color:var(--navy); margin-bottom:10px}
+  .exito p{margin:0 auto 20px; font-size:15px; line-height:1.65; color:var(--ink-2); max-width:34ch}
+
+  #sin-red{display:none; background:var(--gold-d); color:#fff; text-align:center; padding:9px 14px;
+           font:600 11px/1.3 var(--cond); letter-spacing:.12em; text-transform:uppercase}
+  #sin-red.on{display:block}
+  .pila{display:flex; flex-direction:column; gap:18px}
   .oculto{display:none}
-  .barraprog{height:6px; background:#DDE1E8; border-radius:99px; overflow:hidden; margin-top:10px}
-  .barraprog i{display:block; height:100%; background:var(--accent); border-radius:99px; transition:width .3s ease}
-  .cuenta{display:flex; align-items:center; justify-content:space-between; gap:10px; margin:2px 0 10px}
-  .cuenta b{font-size:15px; font-variant-numeric:tabular-nums}
-  .cuenta button{background:#fff; border:1px solid var(--line); border-radius:8px; padding:8px 12px;
-                 font:600 13px inherit; font-family:inherit; color:var(--accent); cursor:pointer}
-  .exito{text-align:center; padding:34px 18px}
-  .exito .tick{width:64px; height:64px; border-radius:50%; background:var(--ok); color:#fff;
-               font-size:34px; line-height:64px; margin:0 auto 16px}
-  .exito h2{font-size:20px; margin-bottom:6px}
-  .exito p{color:var(--ink-2); font-size:15px; margin:0 0 22px}
-  @media (prefers-reduced-motion:no-preference){.card,.plan{transition:opacity .15s ease}}
 </style>
 </head>
 <body>
-<div id="sin-red">Sin conexión — lo que registres se guarda y se manda al volver la señal</div>
+<div id="app-shell">
+<div id="sin-red">Sin conexión · los registros se envían al volver la señal</div>
 
 <!-- ENTRAR -->
 <div id="pantalla-entrar">
-  <header><div class="wrap"><h1>Or Barak</h1><span class="quien">Registro de clase</span></div>
-    <div style="height:14px"></div></header>
-  <div class="wrap">
-    <div class="card">
+  <div class="hero">
+    <img src="shield-white.png" alt="Or Barak">
+    <div>
+      <div class="eyebrow">Metivta Or Barak</div>
+      <div class="titulo">Registro de clase</div>
+    </div>
+  </div>
+  <main>
+    <div>
       <div class="campo">
         <label for="sel-maestro">Maestro</label>
         <select id="sel-maestro"><option value="">Cargando…</option></select>
       </div>
       <div class="campo">
         <label for="inp-pin">PIN</label>
-        <input id="inp-pin" type="tel" inputmode="numeric" maxlength="6" placeholder="tu PIN">
+        <input id="inp-pin" type="tel" inputmode="numeric" maxlength="6" placeholder="Su PIN">
       </div>
+      <div id="aviso-entrar" style="margin-bottom:16px"></div>
       <button class="cta" id="btn-entrar">Entrar</button>
-      <div id="aviso-entrar"></div>
     </div>
-    <p class="muted" style="text-align:center">¿No tienes PIN? Pídeselo al coordinador.</p>
-  </div>
+    <p class="muted" style="text-align:center; margin:0">Si no tiene PIN, pídalo al coordinador.</p>
+  </main>
 </div>
 
 <!-- APP -->
 <div id="pantalla-app" class="oculto">
   <header>
-    <div class="wrap"><h1 id="hdr-materia">Or Barak</h1><span class="quien"><span id="hdr-maestro"></span> · <a href="#" id="btn-salir" style="color:#A9B4CE">Salir</a></span></div>
-    <div class="wrap"><nav>
+    <div class="marca">
+      <div class="izq"><img src="shield-white.png" alt=""><span class="nombre">Or Barak</span></div>
+      <a href="#" id="btn-salir">Salir</a>
+    </div>
+    <h1 id="hdr-materia">Registro de clase</h1>
+    <span id="hdr-maestro"></span>
+    <nav>
       <button data-tab="clase" class="on">Clase</button>
       <button data-tab="calif">Calificaciones</button>
       <button data-tab="temario">Temario</button>
-    </nav></div>
+    </nav>
   </header>
 
-  <div class="wrap">
+  <main>
     <div class="card" id="card-materia">
       <label for="sel-materia">Materia</label>
       <select id="sel-materia"></select>
-      <div class="muted" id="linea-horario" style="margin-top:8px"></div>
+      <div class="muted" id="linea-horario" style="margin-top:10px"></div>
       <div id="prog-caja" class="oculto">
         <div class="barraprog"><i id="prog-barra" style="width:0%"></i></div>
-        <div class="muted" id="prog-texto" style="margin-top:6px"></div>
+        <div class="muted" id="prog-texto" style="margin-top:7px"></div>
       </div>
     </div>
 
     <!-- CLASE -->
-    <section id="tab-clase">
-      <div class="card">
+    <section id="tab-clase" class="pila">
+      <div class="card" style="padding-bottom:12px">
         <label for="sel-sesion">Sesión</label>
         <select id="sel-sesion"></select>
       </div>
       <div id="plan-caja"></div>
       <div class="card">
         <div class="campo">
-          <label>¿Diste el tema planeado?</label>
+          <span class="etq">¿Dio el tema planeado?</span>
           <div class="seg si" id="seg-cubrio">
             <button data-v="Sí">Sí</button><button data-v="Parcial">Parcial</button><button data-v="No">No</button>
           </div>
         </div>
         <div class="campo">
-          <label for="inp-impartido">Tema que sí diste</label>
-          <textarea id="inp-impartido" placeholder="Escribe lo que se vio en clase"></textarea>
+          <label for="inp-impartido">Tema que sí dio</label>
+          <textarea id="inp-impartido" placeholder="Lo que se vio en clase"></textarea>
         </div>
         <div class="campo">
-          <label for="inp-tarea">Tarea que dejaste</label>
+          <label for="inp-tarea">Tarea que dejó</label>
           <textarea id="inp-tarea" placeholder="Opcional"></textarea>
         </div>
         <div class="campo">
@@ -200,9 +267,10 @@
         </div>
       </div>
       <div class="card">
-        <h3 style="font-size:15px; margin-bottom:4px">Asistencia</h3>
-        <p class="muted" style="margin:0 0 6px">Todos empiezan como presentes. Cambia solo a los que falten.</p>
-        <div class="cuenta"><b id="cont-asis">—</b><button id="btn-todos">Marcar todos presentes</button></div>
+        <div class="cuenta">
+          <div><h3>Asistencia</h3><b id="cont-asis">—</b></div>
+          <button id="btn-todos">Todos presentes</button>
+        </div>
         <div id="lista-alumnos"></div>
       </div>
       <div id="aviso-clase"></div>
@@ -210,15 +278,15 @@
 
     <section id="exito" class="oculto">
       <div class="card exito">
-        <div class="tick">✓</div>
+        <img src="shield-color.png" alt="">
         <h2 id="exito-titulo">Sesión registrada</h2>
         <p id="exito-msg"></p>
-        <button class="cta" id="btn-otra">Registrar otra clase</button>
+        <button class="cta linea" id="btn-otra">Registrar otra clase</button>
       </div>
     </section>
 
     <!-- CALIFICACIONES -->
-    <section id="tab-calif" class="oculto">
+    <section id="tab-calif" class="oculto pila">
       <div class="card">
         <label for="sel-tipo">Tipo de evaluación</label>
         <select id="sel-tipo">
@@ -228,8 +296,8 @@
         </select>
       </div>
       <div class="card">
-        <h3 style="font-size:15px; margin-bottom:4px">Calificaciones</h3>
-        <p class="muted" style="margin:0 0 6px">Escala 0 a 10. Deja en blanco a quien no presentó.</p>
+        <h3>Calificaciones</h3>
+        <p class="muted" style="margin:2px 0 12px">Escala 0 a 10. Deje en blanco a quien no presentó.</p>
         <div id="lista-calif"></div>
       </div>
       <div id="aviso-calif"></div>
@@ -239,9 +307,13 @@
     <section id="tab-temario" class="oculto">
       <div class="card"><div id="lista-temario"></div></div>
     </section>
-  </div>
+  </main>
 
-  <div class="barra"><div class="wrap"><button class="cta" id="btn-guardar">Registrar sesión</button></div></div>
+  <div class="barra"><div>
+    <div class="resumen"><span id="barra-resumen"></span><span id="barra-extra"></span></div>
+    <button class="cta" id="btn-guardar">Registrar sesión</button>
+  </div></div>
+</div>
 </div>
 
 <script>
@@ -250,9 +322,10 @@ var S = { maestro:'', materias:[], clave:'', datos:null, cubrio:'Sí', tab:'clas
 function $(id){ return document.getElementById(id); }
 // ================= CONEXIÓN CON EL SHEET =================
 // Pega aquí el URL de tu implementación de Apps Script (termina en /exec)
-var API_URL = 'https://script.google.com/macros/s/AKfycbwwf7g-2dS1I3EyQugckgnA2hjRreo8LhAx6CDbVhgT8BFWOFNcYKM1W5coKtuI5qpuQg/exec';
+var API_URL = 'https://script.google.com/macros/s/PEGA-AQUI-TU-URL/exec';
+
 // Debe ser IDÉNTICA a la APP_KEY del Apps Script.
-var APP_KEY = 'Orbarak302';
+var APP_KEY = 'CAMBIA-ESTA-CLAVE-POR-UNA-TUYA';
 
 var OFFLINE = ['registrarSesion', 'registrarCalificaciones'];
 
@@ -434,6 +507,7 @@ Array.prototype.forEach.call(document.querySelectorAll('nav button'), function(b
     ['clase','calif','temario'].forEach(function(t){ $('tab-'+t).classList.toggle('oculto', t!==S.tab); });
     $('btn-guardar').textContent = S.tab==='calif' ? 'Guardar calificaciones' : 'Registrar sesión';
     document.querySelector('.barra').classList.toggle('oculto', S.tab==='temario');
+    pintarBarra();
     window.scrollTo(0,0);
   };
 });
@@ -468,7 +542,7 @@ function cargarMateria(clave){
   google.script.run.withSuccessHandler(function(d){
     S.datos = d;
     $('linea-horario').innerHTML = d.horario && d.horario.length
-      ? (S.sugerida===clave ? '<b style="color:var(--accent)">Te toca ahora</b> · ' : '') + esc(d.horario.join('  ·  '))
+      ? (S.sugerida===clave ? '<b class="toca">Le toca ahora</b> · ' : '') + esc(d.horario.join('  ·  '))
       : 'Sin horario fijo capturado';
     pintarProgreso();
     pintarSesiones(); pintarAlumnos(); pintarTemario();
@@ -499,7 +573,7 @@ function pintarSesiones(){
     s.innerHTML += '<option value="'+t.sesion+'">Sesión '+t.sesion+' — '+esc(t.tema)+(dada?' (ya registrada)':'')+'</option>';
   });
   s.value = d.siguiente || d.temario[d.temario.length-1].sesion;
-  s.onchange = function(){ S.forzar = false; aviso('aviso-clase','',''); pintarPlan(Number(this.value)); };
+  s.onchange = function(){ S.forzar = false; aviso('aviso-clase','',''); pintarPlan(Number(this.value)); pintarBarra(); };
   pintarPlan(Number(s.value));
 }
 
@@ -572,9 +646,19 @@ function pintarAlumnos(){
 }
 
 function contarAsis(){
-  var total = 0, pres = 0;
+  var total = 0, pres = 0, faltan = [];
   for(var id in S.asis){ total++; if(S.asis[id]==='Asistió') pres++; }
   $('cont-asis').textContent = total ? pres+' de '+total+' presentes' : '—';
+  pintarBarra();
+}
+
+function pintarBarra(){
+  if(S.tab === 'calif'){ $('barra-resumen').textContent = 'Escala 0 a 10'; $('barra-extra').textContent = ''; return; }
+  var total = 0, pres = 0;
+  for(var id in S.asis){ total++; if(S.asis[id]==='Asistió') pres++; }
+  var s = $('sel-sesion').value;
+  $('barra-resumen').textContent = s ? 'Sesión ' + s : 'Sin temario';
+  $('barra-extra').textContent = total ? pres + ' de ' + total + ' presentes' : '';
 }
 
 function pintarTemario(){
