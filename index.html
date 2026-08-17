@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Or Barak — Maestros</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#14213D">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Or Barak">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  :root{
+    --ink:#14213D; --ink-2:#4A5578; --paper:#EEF1F5; --card:#FFFFFF;
+    --line:#D7DCE5; --accent:#0F6E6E; --accent-d:#0A5252;
+    --ok:#1B7F5A; --warn:#A9670B; --bad:#A62A22; --late:#7A5AA6;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0; padding:0}
+  body{
+    background:var(--paper); color:var(--ink);
+    font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    padding-bottom:96px;
+  }
+  .wrap{max-width:560px; margin:0 auto; padding:0 14px}
+  h1,h2,h3{margin:0; letter-spacing:-0.02em}
+  .muted{color:var(--ink-2); font-size:13px}
+
+  header{background:var(--ink); color:#fff; padding:calc(14px + env(safe-area-inset-top)) 0 0}
+  .barra{padding-bottom:calc(14px + env(safe-area-inset-bottom)) !important}
+  #sin-red{display:none; background:var(--warn); color:#fff; font-size:13px; text-align:center; padding:7px 10px}
+  #sin-red.on{display:block}
+  header .wrap{display:flex; align-items:baseline; justify-content:space-between}
+  header h1{font-size:17px; font-weight:700}
+  header .quien{font-size:12px; color:#A9B4CE}
+  nav{display:flex; gap:2px; margin-top:12px}
+  nav button{
+    flex:1; background:transparent; border:0; color:#A9B4CE; font-size:14px; font-weight:600;
+    padding:12px 4px; border-bottom:3px solid transparent; cursor:pointer; font-family:inherit;
+  }
+  nav button.on{color:#fff; border-bottom-color:var(--accent)}
+
+  .card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px; margin:14px 0}
+  label{display:block; font-size:12px; font-weight:700; text-transform:uppercase;
+        letter-spacing:.06em; color:var(--ink-2); margin:0 0 6px}
+  select,input,textarea{
+    width:100%; font:16px/1.4 inherit; color:var(--ink); background:#fff;
+    border:1px solid var(--line); border-radius:9px; padding:12px; font-family:inherit;
+  }
+  textarea{min-height:76px; resize:vertical}
+  select:focus,input:focus,textarea:focus,button:focus-visible{outline:3px solid #9FD3D3; outline-offset:1px}
+  .campo{margin-bottom:14px}
+  .campo:last-child{margin-bottom:0}
+
+  /* Tarjeta del plan: el número de sesión vive en el margen */
+  .plan{display:flex; gap:14px; background:#fff; border:1px solid var(--line);
+        border-left:5px solid var(--accent); border-radius:12px; padding:14px; margin:14px 0}
+  .plan .n{flex:0 0 auto; text-align:center; min-width:44px}
+  .plan .n b{display:block; font-size:30px; line-height:1; font-variant-numeric:tabular-nums}
+  .plan .n span{font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-2)}
+  .plan .t{font-size:17px; font-weight:700; margin-bottom:4px}
+  .plan dl{margin:8px 0 0; font-size:13px}
+  .plan dt{color:var(--ink-2); font-size:11px; text-transform:uppercase; letter-spacing:.06em; margin-top:8px}
+  .plan dd{margin:2px 0 0}
+  .sinplan{border-left-color:var(--warn); background:#FFF8EC}
+
+  .seg{display:flex; gap:6px}
+  .seg button{
+    flex:1; padding:11px 4px; font-size:13px; font-weight:700; font-family:inherit;
+    background:#fff; border:1px solid var(--line); border-radius:9px; color:var(--ink-2); cursor:pointer;
+  }
+  .seg button.on{background:var(--ink); border-color:var(--ink); color:#fff}
+  .seg.si button.on[data-v="Sí"]{background:var(--ok); border-color:var(--ok)}
+  .seg.si button.on[data-v="Parcial"]{background:var(--warn); border-color:var(--warn)}
+  .seg.si button.on[data-v="No"]{background:var(--bad); border-color:var(--bad)}
+
+  .alumno{padding:12px 0; border-top:1px solid var(--line)}
+  .alumno:first-child{border-top:0}
+  .alumno .nm{font-weight:600; font-size:15px; margin-bottom:8px}
+  .mini{display:flex; gap:5px}
+  .mini button{
+    flex:1; padding:9px 2px; font-size:12px; font-weight:700; font-family:inherit;
+    background:#fff; border:1px solid var(--line); border-radius:8px; color:var(--ink-2); cursor:pointer;
+  }
+  .mini button.on[data-v="Asistió"]{background:var(--ok); border-color:var(--ok); color:#fff}
+  .mini button.on[data-v="Retardo"]{background:var(--late); border-color:var(--late); color:#fff}
+  .mini button.on[data-v="Falta"]{background:var(--bad); border-color:var(--bad); color:#fff}
+  .mini button.on[data-v="Falta justificada"]{background:var(--ink-2); border-color:var(--ink-2); color:#fff}
+  .calif{width:92px; text-align:center; font-variant-numeric:tabular-nums}
+
+  .barra{position:fixed; left:0; right:0; bottom:0; background:rgba(238,241,245,.96);
+         border-top:1px solid var(--line); padding:10px 0 14px; backdrop-filter:blur(6px)}
+  .cta{width:100%; padding:15px; font-size:16px; font-weight:700; font-family:inherit;
+       background:var(--accent); color:#fff; border:0; border-radius:11px; cursor:pointer}
+  .cta:active{background:var(--accent-d)}
+  .cta[disabled]{background:#9AA6BE; cursor:default}
+
+  .aviso{padding:12px 14px; border-radius:10px; font-size:14px; margin:14px 0}
+  .aviso.ok{background:#E4F3EC; color:#14603F; border:1px solid #B4DCC8}
+  .aviso.err{background:#FBEAE8; color:#8C221B; border:1px solid #EFC3BE}
+  .aviso.info{background:#FFF8EC; color:#7A4B06; border:1px solid #F0DCB4}
+
+  .lista-t{list-style:none; margin:0; padding:0}
+  .lista-t li{display:flex; gap:10px; align-items:flex-start; padding:11px 0; border-top:1px solid var(--line)}
+  .lista-t li:first-child{border-top:0}
+  .lista-t .est{flex:0 0 auto; font-size:11px; font-weight:700; padding:3px 7px; border-radius:20px; margin-top:2px}
+  .est.dada{background:#E4F3EC; color:#14603F}
+  .est.pend{background:#EEF1F5; color:var(--ink-2)}
+  .lista-t .tt{font-size:15px; font-weight:600}
+  .vacio{text-align:center; color:var(--ink-2); font-size:14px; padding:26px 10px}
+  .oculto{display:none}
+  .barraprog{height:6px; background:#DDE1E8; border-radius:99px; overflow:hidden; margin-top:10px}
+  .barraprog i{display:block; height:100%; background:var(--accent); border-radius:99px; transition:width .3s ease}
+  .cuenta{display:flex; align-items:center; justify-content:space-between; gap:10px; margin:2px 0 10px}
+  .cuenta b{font-size:15px; font-variant-numeric:tabular-nums}
+  .cuenta button{background:#fff; border:1px solid var(--line); border-radius:8px; padding:8px 12px;
+                 font:600 13px inherit; font-family:inherit; color:var(--accent); cursor:pointer}
+  .exito{text-align:center; padding:34px 18px}
+  .exito .tick{width:64px; height:64px; border-radius:50%; background:var(--ok); color:#fff;
+               font-size:34px; line-height:64px; margin:0 auto 16px}
+  .exito h2{font-size:20px; margin-bottom:6px}
+  .exito p{color:var(--ink-2); font-size:15px; margin:0 0 22px}
+  @media (prefers-reduced-motion:no-preference){.card,.plan{transition:opacity .15s ease}}
+</style>
+</head>
+<body>
+<div id="sin-red">Sin conexión — lo que registres se guarda y se manda al volver la señal</div>
+
+<!-- ENTRAR -->
+<div id="pantalla-entrar">
+  <header><div class="wrap"><h1>Or Barak</h1><span class="quien">Registro de clase</span></div>
+    <div style="height:14px"></div></header>
+  <div class="wrap">
+    <div class="card">
+      <div class="campo">
+        <label for="sel-maestro">Maestro</label>
+        <select id="sel-maestro"><option value="">Cargando…</option></select>
+      </div>
+      <div class="campo">
+        <label for="inp-pin">PIN</label>
+        <input id="inp-pin" type="tel" inputmode="numeric" maxlength="6" placeholder="tu PIN">
+      </div>
+      <button class="cta" id="btn-entrar">Entrar</button>
+      <div id="aviso-entrar"></div>
+    </div>
+    <p class="muted" style="text-align:center">¿No tienes PIN? Pídeselo al coordinador.</p>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="pantalla-app" class="oculto">
+  <header>
+    <div class="wrap"><h1 id="hdr-materia">Or Barak</h1><span class="quien"><span id="hdr-maestro"></span> · <a href="#" id="btn-salir" style="color:#A9B4CE">Salir</a></span></div>
+    <div class="wrap"><nav>
+      <button data-tab="clase" class="on">Clase</button>
+      <button data-tab="calif">Calificaciones</button>
+      <button data-tab="temario">Temario</button>
+    </nav></div>
+  </header>
+
+  <div class="wrap">
+    <div class="card" id="card-materia">
+      <label for="sel-materia">Materia</label>
+      <select id="sel-materia"></select>
+      <div class="muted" id="linea-horario" style="margin-top:8px"></div>
+      <div id="prog-caja" class="oculto">
+        <div class="barraprog"><i id="prog-barra" style="width:0%"></i></div>
+        <div class="muted" id="prog-texto" style="margin-top:6px"></div>
+      </div>
+    </div>
+
+    <!-- CLASE -->
+    <section id="tab-clase">
+      <div class="card">
+        <label for="sel-sesion">Sesión</label>
+        <select id="sel-sesion"></select>
+      </div>
+      <div id="plan-caja"></div>
+      <div class="card">
+        <div class="campo">
+          <label>¿Diste el tema planeado?</label>
+          <div class="seg si" id="seg-cubrio">
+            <button data-v="Sí">Sí</button><button data-v="Parcial">Parcial</button><button data-v="No">No</button>
+          </div>
+        </div>
+        <div class="campo">
+          <label for="inp-impartido">Tema que sí diste</label>
+          <textarea id="inp-impartido" placeholder="Escribe lo que se vio en clase"></textarea>
+        </div>
+        <div class="campo">
+          <label for="inp-tarea">Tarea que dejaste</label>
+          <textarea id="inp-tarea" placeholder="Opcional"></textarea>
+        </div>
+        <div class="campo">
+          <label for="inp-obs">Observaciones</label>
+          <textarea id="inp-obs" placeholder="Incidencias, ausencias avisadas, material que faltó"></textarea>
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="font-size:15px; margin-bottom:4px">Asistencia</h3>
+        <p class="muted" style="margin:0 0 6px">Todos empiezan como presentes. Cambia solo a los que falten.</p>
+        <div class="cuenta"><b id="cont-asis">—</b><button id="btn-todos">Marcar todos presentes</button></div>
+        <div id="lista-alumnos"></div>
+      </div>
+      <div id="aviso-clase"></div>
+    </section>
+
+    <section id="exito" class="oculto">
+      <div class="card exito">
+        <div class="tick">✓</div>
+        <h2 id="exito-titulo">Sesión registrada</h2>
+        <p id="exito-msg"></p>
+        <button class="cta" id="btn-otra">Registrar otra clase</button>
+      </div>
+    </section>
+
+    <!-- CALIFICACIONES -->
+    <section id="tab-calif" class="oculto">
+      <div class="card">
+        <label for="sel-tipo">Tipo de evaluación</label>
+        <select id="sel-tipo">
+          <option>Examen parcial</option><option>Examen oficial</option>
+          <option>Trabajo / proyecto</option><option>Tarea</option>
+          <option>Participación</option><option>Diagnóstico</option>
+        </select>
+      </div>
+      <div class="card">
+        <h3 style="font-size:15px; margin-bottom:4px">Calificaciones</h3>
+        <p class="muted" style="margin:0 0 6px">Escala 0 a 10. Deja en blanco a quien no presentó.</p>
+        <div id="lista-calif"></div>
+      </div>
+      <div id="aviso-calif"></div>
+    </section>
+
+    <!-- TEMARIO -->
+    <section id="tab-temario" class="oculto">
+      <div class="card"><div id="lista-temario"></div></div>
+    </section>
+  </div>
+
+  <div class="barra"><div class="wrap"><button class="cta" id="btn-guardar">Registrar sesión</button></div></div>
+</div>
+
+<script>
+var S = { maestro:'', materias:[], clave:'', datos:null, cubrio:'Sí', tab:'clase', asis:{}, enviando:false, forzar:false, sugerida:'', token:'' };
+
+function $(id){ return document.getElementById(id); }
+// ================= CONEXIÓN CON EL SHEET =================
+// Pega aquí el URL de tu implementación de Apps Script (termina en /exec)
+var API_URL = 'https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbxBF4bML-M7_-V96f0wpSrRdqnH-NJk7QQxJR2fDrjZ1Un2di0Xq_8YI9EjYVWjXafl8g/exec';
+
+// Debe ser IDÉNTICA a la APP_KEY del Apps Script.
+var APP_KEY = 'crh,eusacrh,eusa';
+
+var OFFLINE = ['registrarSesion', 'registrarCalificaciones'];
+
+function api(fn, args){
+  return fetch(API_URL, {
+    method: 'POST',
+    body: JSON.stringify({ key: APP_KEY, fn: fn, args: args })
+  }).then(function(r){ return r.json(); }).then(function(d){
+    if(!d.ok) throw new Error(d.error || 'Error del servidor');
+    return d.res;
+  });
+}
+
+function leerCola(){
+  try { return JSON.parse(window.localStorage.getItem('ob_cola') || '[]'); } catch(e){ return []; }
+}
+function guardarCola(c){
+  try { window.localStorage.setItem('ob_cola', JSON.stringify(c)); } catch(e){}
+  pintarRed();
+}
+function encolar(fn, args){
+  var c = leerCola(); c.push({ fn: fn, args: args }); guardarCola(c);
+}
+
+function sincronizar(){
+  var c = leerCola();
+  if(!c.length || !navigator.onLine) return;
+  var item = c[0];
+  api(item.fn, item.args).then(function(){
+    var d = leerCola(); d.shift(); guardarCola(d);
+    sincronizar();
+  }).catch(function(){});
+}
+
+function pintarRed(){
+  var c = leerCola();
+  var caja = $('sin-red');
+  if(!navigator.onLine){
+    caja.className = 'on';
+    caja.textContent = c.length
+      ? 'Sin conexión — ' + c.length + ' registro(s) esperando para mandarse'
+      : 'Sin conexión — lo que registres se guarda y se manda al volver la señal';
+  } else if(c.length){
+    caja.className = 'on';
+    caja.textContent = 'Mandando ' + c.length + ' registro(s) pendiente(s)…';
+  } else {
+    caja.className = '';
+  }
+}
+
+window.addEventListener('online', function(){ pintarRed(); sincronizar(); });
+window.addEventListener('offline', pintarRed);
+
+// Puente: deja funcionando el código que ya llamaba a google.script.run
+var google = { script: { run: (function crear(ok, err){
+  var o = {};
+  o.withSuccessHandler = function(f){ return crear(f, err); };
+  o.withFailureHandler = function(f){ return crear(ok, f); };
+  ['listaMaestros','entrar','reanudar','cerrarSesion','datosMateria','registrarSesion','registrarCalificaciones'].forEach(function(fn){
+    o[fn] = function(){
+      var args = Array.prototype.slice.call(arguments);
+      api(fn, args).then(function(r){ if(ok) ok(r); }).catch(function(e){
+        if(OFFLINE.indexOf(fn) >= 0 && !navigator.onLine){
+          encolar(fn, args);
+          if(ok) ok({ ok:true, mensaje:'Guardado en tu celular. Se manda solo cuando vuelva la señal.' });
+          return;
+        }
+        if(err) err(e);
+      });
+    };
+  });
+  return o;
+})(null, null) } };
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); });
+}
+
+function esc(t){ var d=document.createElement('div'); d.textContent=t||''; return d.innerHTML; }
+function aviso(caja, tipo, msg){ $(caja).innerHTML = msg ? '<div class="aviso '+tipo+'">'+esc(msg)+'</div>' : ''; }
+
+// ---------- Entrar ----------
+google.script.run.withSuccessHandler(function(lista){
+  var s = $('sel-maestro');
+  s.innerHTML = '<option value="">Elige tu nombre</option>';
+  lista.forEach(function(n){ s.innerHTML += '<option>'+esc(n)+'</option>'; });
+  try {
+    var guardado = window.localStorage.getItem('ob_maestro');
+    if(guardado && lista.indexOf(guardado) >= 0){ s.value = guardado; if(!S.maestro) $('inp-pin').focus(); }
+  } catch(e){}
+}).withFailureHandler(function(e){ aviso('aviso-entrar','err', e.message); }).listaMaestros();
+
+function guardarSesion(m, t){
+  try { window.localStorage.setItem('ob_maestro', m); window.localStorage.setItem('ob_token', t); } catch(e){}
+}
+function olvidarSesion(){
+  try { window.localStorage.removeItem('ob_token'); } catch(e){}
+}
+
+function abrirApp(r){
+  S.maestro = r.maestro; S.token = r.token; S.materias = r.materias;
+  guardarSesion(r.maestro, r.token);
+  $('pantalla-entrar').classList.add('oculto');
+  $('pantalla-app').classList.remove('oculto');
+  $('hdr-maestro').textContent = r.maestro;
+  var sm = $('sel-materia');
+  if(!r.materias.length){
+    sm.innerHTML = '<option value="">No tienes materias asignadas</option>';
+    return;
+  }
+  sm.innerHTML = '';
+  r.materias.forEach(function(x){ sm.innerHTML += '<option value="'+esc(x.clave)+'">'+esc(x.materia)+'</option>'; });
+  var abrir = r.sugerida || r.materias[0].clave;
+  sm.value = abrir;
+  S.sugerida = r.sugerida || '';
+  cargarMateria(abrir);
+}
+
+function terminaEntrada(){
+  $('btn-entrar').disabled = false; $('btn-entrar').textContent = 'Entrar';
+}
+
+function intentarEntrar(m, p){
+  $('btn-entrar').disabled = true; $('btn-entrar').textContent = 'Entrando…';
+  google.script.run.withSuccessHandler(function(r){
+    terminaEntrada(); abrirApp(r);
+  }).withFailureHandler(function(e){
+    terminaEntrada(); aviso('aviso-entrar','err', e.message);
+  }).entrar(m, p);
+}
+
+/** Reanuda con el token guardado; si ya no sirve, pide PIN otra vez. */
+function reanudarSesion(token){
+  $('btn-entrar').disabled = true; $('btn-entrar').textContent = 'Entrando…';
+  google.script.run.withSuccessHandler(function(r){
+    terminaEntrada(); abrirApp(r);
+  }).withFailureHandler(function(e){
+    terminaEntrada(); olvidarSesion(); $('inp-pin').value = '';
+    aviso('aviso-entrar','info', e.message);
+  }).reanudar(token);
+}
+
+$('btn-entrar').onclick = function(){
+  var m = $('sel-maestro').value, p = $('inp-pin').value.trim();
+  if(!m){ return aviso('aviso-entrar','err','Elige tu nombre de la lista.'); }
+  if(!p){ return aviso('aviso-entrar','err','Escribe tu PIN.'); }
+  intentarEntrar(m, p);
+};
+
+$('btn-salir').onclick = function(e){
+  e.preventDefault();
+  if(S.token) google.script.run.cerrarSesion(S.token);
+  olvidarSesion();
+  S.maestro = ''; S.token = ''; S.datos = null;
+  $('inp-pin').value = '';
+  $('pantalla-app').classList.add('oculto');
+  $('pantalla-entrar').classList.remove('oculto');
+  aviso('aviso-entrar','','');
+  window.scrollTo(0,0);
+};
+
+pintarRed(); sincronizar();
+
+// Entrada automática si ya entró antes en este celular
+(function(){
+  var t = null;
+  try { t = window.localStorage.getItem('ob_token'); } catch(e){}
+  if(t) reanudarSesion(t);
+})();
+
+// ---------- Navegación ----------
+Array.prototype.forEach.call(document.querySelectorAll('nav button'), function(b){
+  b.onclick = function(){
+    Array.prototype.forEach.call(document.querySelectorAll('nav button'), function(x){ x.classList.remove('on'); });
+    b.classList.add('on');
+    S.tab = b.dataset.tab;
+    $('exito').classList.add('oculto');
+    $('card-materia').classList.remove('oculto');
+    ['clase','calif','temario'].forEach(function(t){ $('tab-'+t).classList.toggle('oculto', t!==S.tab); });
+    $('btn-guardar').textContent = S.tab==='calif' ? 'Guardar calificaciones' : 'Registrar sesión';
+    document.querySelector('.barra').classList.toggle('oculto', S.tab==='temario');
+    window.scrollTo(0,0);
+  };
+});
+
+$('sel-materia').onchange = function(){ cargarMateria(this.value); };
+
+$('btn-todos').onclick = function(){
+  for(var id in S.asis) S.asis[id] = 'Asistió';
+  Array.prototype.forEach.call($('lista-alumnos').querySelectorAll('button'), function(b){
+    b.classList.toggle('on', b.dataset.v === 'Asistió');
+  });
+  contarAsis();
+};
+
+$('btn-otra').onclick = function(){
+  $('exito').classList.add('oculto');
+  $('tab-clase').classList.remove('oculto');
+  $('card-materia').classList.remove('oculto');
+  document.querySelector('.barra').classList.remove('oculto');
+  cargarMateria(S.clave);
+  window.scrollTo(0,0);
+};
+
+// ---------- Cargar materia ----------
+function cargarMateria(clave){
+  S.clave = clave; S.datos = null; S.forzar = false;
+  $('plan-caja').innerHTML = '<div class="card"><p class="muted" style="margin:0">Cargando la materia…</p></div>';
+  $('lista-alumnos').innerHTML = ''; $('lista-calif').innerHTML = ''; $('lista-temario').innerHTML = '';
+  var mm = S.materias.filter(function(x){ return x.clave===clave; })[0];
+  $('hdr-materia').textContent = mm ? mm.materia : 'Or Barak';
+  $('linea-horario').textContent = '';
+  google.script.run.withSuccessHandler(function(d){
+    S.datos = d;
+    $('linea-horario').innerHTML = d.horario && d.horario.length
+      ? (S.sugerida===clave ? '<b style="color:var(--accent)">Te toca ahora</b> · ' : '') + esc(d.horario.join('  ·  '))
+      : 'Sin horario fijo capturado';
+    pintarProgreso();
+    pintarSesiones(); pintarAlumnos(); pintarTemario();
+  }).withFailureHandler(function(e){
+    $('plan-caja').innerHTML = '<div class="aviso err">'+esc(e.message)+'</div>';
+  }).datosMateria(S.token, clave);
+}
+
+function pintarProgreso(){
+  var d = S.datos, total = d.temario.length, hechas = 0;
+  for(var k in d.registradas) hechas++;
+  if(!total){ $('prog-caja').classList.add('oculto'); return; }
+  if(hechas > total) hechas = total;
+  $('prog-caja').classList.remove('oculto');
+  $('prog-barra').style.width = Math.round(hechas/total*100)+'%';
+  $('prog-texto').textContent = hechas+' de '+total+' sesiones dadas · faltan '+(total-hechas);
+}
+
+function pintarSesiones(){
+  var d = S.datos, s = $('sel-sesion');
+  if(!d.temario.length){
+    s.innerHTML = '<option value="">Sin temario capturado</option>';
+    pintarPlan(null); return;
+  }
+  s.innerHTML = '';
+  d.temario.forEach(function(t){
+    var dada = d.registradas[t.sesion];
+    s.innerHTML += '<option value="'+t.sesion+'">Sesión '+t.sesion+' — '+esc(t.tema)+(dada?' (ya registrada)':'')+'</option>';
+  });
+  s.value = d.siguiente || d.temario[d.temario.length-1].sesion;
+  s.onchange = function(){ S.forzar = false; aviso('aviso-clase','',''); pintarPlan(Number(this.value)); };
+  pintarPlan(Number(s.value));
+}
+
+function pintarPlan(n){
+  var d = S.datos, caja = $('plan-caja');
+  if(!n){
+    caja.innerHTML = '<div class="plan sinplan"><div class="t">Esta materia no tiene temario</div>'+
+      '<p class="muted" style="margin:6px 0 0">Puedes registrar la clase, pero no habrá contra qué comparar lo que diste. '+
+      'Pídele al coordinador que capture el temario.</p></div>';
+    $('inp-impartido').value = ''; $('inp-tarea').value = ''; marcarCubrio('Sí');
+    return;
+  }
+  var t = d.temario.filter(function(x){ return x.sesion===n; })[0];
+  var dada = d.registradas[n];
+  caja.innerHTML =
+    '<div class="plan"><div class="n"><b>'+n+'</b><span>sesión</span></div><div style="flex:1">'+
+      '<div class="t">'+esc(t.tema)+'</div>'+
+      (t.fecha ? '<div class="muted">Planeada para el '+esc(t.fecha)+'</div>' : '')+
+      '<dl>'+
+        (t.objetivo ? '<dt>Objetivo</dt><dd>'+esc(t.objetivo)+'</dd>' : '')+
+        (t.material ? '<dt>Material</dt><dd>'+esc(t.material)+'</dd>' : '')+
+        (t.tarea ? '<dt>Tarea planeada</dt><dd>'+esc(t.tarea)+'</dd>' : '')+
+      '</dl>'+
+    '</div></div>' +
+    (dada ? '<div class="aviso info">Esta sesión ya se registró el '+esc(dada)+'. Si la vuelves a registrar quedarán dos renglones.</div>' : '');
+  $('inp-impartido').value = t.tema;
+  $('inp-tarea').value = t.tarea;
+  marcarCubrio('Sí');
+}
+
+function marcarCubrio(v){
+  S.cubrio = v;
+  Array.prototype.forEach.call($('seg-cubrio').children, function(b){ b.classList.toggle('on', b.dataset.v===v); });
+}
+Array.prototype.forEach.call($('seg-cubrio').children, function(b){
+  b.onclick = function(){ marcarCubrio(b.dataset.v); if(b.dataset.v!=='Sí') $('inp-impartido').focus(); };
+});
+marcarCubrio('Sí');
+
+function pintarAlumnos(){
+  var d = S.datos, cont = $('lista-alumnos'), cal = $('lista-calif');
+  S.asis = {};
+  if(!d.alumnos.length){
+    var v = '<p class="vacio">No hay alumnos inscritos en esta materia.<br>El coordinador los da de alta en la hoja Inscripciones.</p>';
+    cont.innerHTML = v; cal.innerHTML = v; contarAsis(); return;
+  }
+  cont.innerHTML = ''; cal.innerHTML = '';
+  d.alumnos.forEach(function(a){
+    S.asis[a.id] = 'Asistió';
+    var estados = ['Asistió','Retardo','Falta','Falta justificada'];
+    var cortos = ['Asistió','Retardo','Falta','Justif.'];
+    var html = '<div class="alumno"><div class="nm">'+esc(a.nombre)+'</div><div class="mini">';
+    estados.forEach(function(e,i){
+      html += '<button data-id="'+esc(a.id)+'" data-v="'+esc(e)+'"'+(i===0?' class="on"':'')+'>'+cortos[i]+'</button>';
+    });
+    cont.innerHTML += html + '</div></div>';
+    cal.innerHTML += '<div class="alumno" style="display:flex; align-items:center; justify-content:space-between; gap:12px">'+
+      '<div class="nm" style="margin:0">'+esc(a.nombre)+'</div>'+
+      '<input class="calif" type="tel" inputmode="decimal" data-id="'+esc(a.id)+'" placeholder="—"></div>';
+  });
+  Array.prototype.forEach.call(cont.querySelectorAll('button'), function(b){
+    b.onclick = function(){
+      S.asis[b.dataset.id] = b.dataset.v;
+      Array.prototype.forEach.call(b.parentElement.children, function(x){ x.classList.remove('on'); });
+      b.classList.add('on');
+      contarAsis();
+    };
+  });
+  contarAsis();
+}
+
+function contarAsis(){
+  var total = 0, pres = 0;
+  for(var id in S.asis){ total++; if(S.asis[id]==='Asistió') pres++; }
+  $('cont-asis').textContent = total ? pres+' de '+total+' presentes' : '—';
+}
+
+function pintarTemario(){
+  var d = S.datos, c = $('lista-temario');
+  if(!d.temario.length){ c.innerHTML = '<p class="vacio">Esta materia todavía no tiene temario capturado.</p>'; return; }
+  var html = '<ul class="lista-t">';
+  d.temario.forEach(function(t){
+    var dada = d.registradas[t.sesion];
+    html += '<li><span class="est '+(dada?'dada':'pend')+'">'+(dada?'Dada':'Sesión '+t.sesion)+'</span>'+
+      '<div><div class="tt">'+esc(t.tema)+'</div>'+
+      '<div class="muted">'+(dada ? 'Registrada el '+esc(dada) : (t.fecha ? 'Planeada para el '+esc(t.fecha) : 'Sin fecha planeada'))+'</div></div></li>';
+  });
+  c.innerHTML = html + '</ul>';
+}
+
+// ---------- Guardar ----------
+$('btn-guardar').onclick = function(){
+  if(S.enviando || !S.datos) return;
+  if(S.tab === 'calif') return guardarCalif();
+  guardarSesion(S.forzar);
+};
+
+function bloquea(txt){ S.enviando = true; $('btn-guardar').disabled = true; $('btn-guardar').textContent = txt; }
+function libera(txt){ S.enviando = false; $('btn-guardar').disabled = false; $('btn-guardar').textContent = txt; }
+
+function guardarSesion(forzar){
+  var impartido = $('inp-impartido').value.trim();
+  if(!impartido){ aviso('aviso-clase','err','Escribe qué tema diste hoy.'); return; }
+  var lista = [];
+  for(var id in S.asis){ lista.push({ id:id, estado:S.asis[id], obs:'' }); }
+  bloquea('Registrando…');
+  google.script.run.withSuccessHandler(function(r){
+    if(r.duplicado){
+      libera('Registrar sesión');
+      S.forzar = true;
+      aviso('aviso-clase','info', r.mensaje + ' Toca otra vez para registrarla de todos modos.');
+      return;
+    }
+    libera('Registrar sesión');
+    S.forzar = false;
+    aviso('aviso-clase','','');
+    $('inp-obs').value = '';
+    $('exito-msg').textContent = r.mensaje;
+    $('tab-clase').classList.add('oculto');
+    $('card-materia').classList.add('oculto');
+    document.querySelector('.barra').classList.add('oculto');
+    $('exito').classList.remove('oculto');
+    window.scrollTo(0,0);
+  }).withFailureHandler(function(e){
+    libera('Registrar sesión'); aviso('aviso-clase','err', e.message);
+  }).registrarSesion({
+    token:S.token, clave:S.clave, sesion:$('sel-sesion').value || 0, fecha:new Date().toISOString(),
+    impartido:impartido, cubrio:S.cubrio, tarea:$('inp-tarea').value.trim(),
+    obs:$('inp-obs').value.trim(), asistencia:lista, forzar:forzar
+  });
+}
+
+function guardarCalif(){
+  var lista = [];
+  Array.prototype.forEach.call($('lista-calif').querySelectorAll('input'), function(i){
+    var v = i.value.trim();
+    if(v !== '') lista.push({ id:i.dataset.id, calif:v.replace(',', '.'), obs:'' });
+  });
+  if(!lista.length){ aviso('aviso-calif','err','No capturaste ninguna calificación.'); return; }
+  var mala = lista.filter(function(x){ var n=Number(x.calif); return isNaN(n) || n<0 || n>10; });
+  if(mala.length){ aviso('aviso-calif','err','Hay calificaciones fuera del 0 al 10.'); return; }
+  bloquea('Guardando…');
+  google.script.run.withSuccessHandler(function(r){
+    libera('Guardar calificaciones');
+    aviso('aviso-calif', r.ok?'ok':'err', r.mensaje);
+    if(r.ok) Array.prototype.forEach.call($('lista-calif').querySelectorAll('input'), function(i){ i.value=''; });
+  }).withFailureHandler(function(e){
+    libera('Guardar calificaciones'); aviso('aviso-calif','err', e.message);
+  }).registrarCalificaciones({ token:S.token, clave:S.clave, tipo:$('sel-tipo').value,
+                               fecha:new Date().toISOString(), calificaciones:lista });
+}
+</script>
+</body>
+</html>
