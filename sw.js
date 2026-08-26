@@ -1,7 +1,7 @@
 // Or Barak — service worker
 // Guarda la app en el celular para que abra sin señal.
 // Sube la versión cada vez que cambies index.html para forzar la actualización.
-var VERSION = 'orbarak-v4';
+var VERSION = 'orbarak-v5';
 var SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './shield-white.png', './shield-color.png'];
 
 self.addEventListener('install', function(e){
