@@ -189,6 +189,10 @@
   .ag .f b{display:block; font:400 15px/1.1 var(--tech); color:var(--navy)}
   .ag .f span{display:block; font:700 9px/1.2 var(--cond); letter-spacing:.1em;
               text-transform:uppercase; color:var(--muted-2); margin-top:2px}
+  .ag .f.rango{border-left:2px solid var(--gold); padding-left:8px; text-align:left}
+  .ag .f.rango b{font:400 13px/1.3 var(--tech)}
+  .ag .f.rango i{display:block; font:700 8px/1.4 var(--cond); letter-spacing:.12em;
+                 text-transform:uppercase; color:var(--muted-2); font-style:normal}
   .ag .nm{font:600 15px/1.35 var(--core)}
   .ag .tg{display:inline-block; margin-top:3px; padding:2px 7px; border-radius:2px;
           font:700 9px/1.4 var(--cond); letter-spacing:.1em; text-transform:uppercase}
@@ -487,11 +491,18 @@ function cargarAgenda(){
     }
     var html = '<ul class="ag">';
     a.eventos.forEach(function(e){
+      var varios = e.dias > 1;
       var t = e.clases === 'No' ? '<span class="tg sin">Sin clases</span>'
             : e.clases === 'Medio día' ? '<span class="tg medio">Medio día</span>'
             : '<span class="tg con">Hay clases</span>';
-      html += '<li><div class="f"><b>' + esc(e.texto) + '</b><span>' + esc(e.dia.substring(0,3)) + '</span></div>' +
-              '<div><div class="nm">' + esc(e.nombre) + '</div>' + t +
+      var caja = varios
+        ? '<div class="f rango"><b>' + esc(e.texto) + '</b><i>a</i><b>' + esc(e.textoFin) + '</b></div>'
+        : '<div class="f"><b>' + esc(e.texto) + '</b><span>' + esc(e.dia.substring(0,3)) + '</span></div>';
+      var linea = varios
+        ? '<div class="muted" style="margin-top:2px">Del ' + esc(e.texto) + ' al ' + esc(e.textoFin) +
+          ' · ' + e.dias + ' días</div>'
+        : '';
+      html += '<li>' + caja + '<div><div class="nm">' + esc(e.nombre) + '</div>' + linea + t +
               (e.notas ? '<div class="muted" style="margin-top:3px">' + esc(e.notas) + '</div>' : '') +
               '</div></li>';
     });
