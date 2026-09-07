@@ -179,6 +179,40 @@
            font:600 11px/1.3 var(--cond); letter-spacing:.12em; text-transform:uppercase}
   #sin-red.on{display:block}
   .pila{display:flex; flex-direction:column; gap:18px}
+  .acciones{display:flex; gap:8px; margin-top:12px}
+  .acciones button{flex:1; min-height:42px; background:#fff; border:1px solid var(--line); border-radius:2px;
+     color:var(--navy); cursor:pointer; font:700 11px/1.2 var(--cond); letter-spacing:.1em; text-transform:uppercase}
+  .reg{display:block; width:100%; text-align:left; padding:12px 0; background:none; border:0;
+       border-top:1px solid var(--line-2); cursor:pointer; font-family:inherit}
+  .reg:first-child{border-top:0}
+  .reg b{display:block; font:600 14px/1.3 var(--core); color:var(--ink)}
+  .reg span{display:block; font:400 12px/1.5 var(--tech); color:var(--muted-2); margin-top:2px}
+  .al{cursor:pointer}
+  .detalle{margin:2px 0 0 22px; padding:10px 0 2px; border-top:1px solid var(--line-2)}
+  .detalle h4{margin:0 0 6px; font:700 10px/1.3 var(--cond); letter-spacing:.14em;
+              text-transform:uppercase; color:var(--muted-2)}
+  .falta{padding:9px 0; border-top:1px solid var(--line-2)}
+  .falta:first-of-type{border-top:0}
+  .falta .fh{font:400 11px/1.4 var(--tech); color:var(--bad)}
+  .falta .ft{font:600 14px/1.35 var(--core); margin-top:2px}
+  .falta dl{margin:5px 0 0}
+  .falta dt{font:700 9px/1.3 var(--cond); letter-spacing:.12em; text-transform:uppercase;
+            color:var(--muted-2); margin-top:6px}
+  .falta dd{margin:1px 0 0; font-size:13px; line-height:1.45; color:var(--ink-2)}
+  .tareacaja{background:var(--gold-bg); border-top:3px solid var(--gold); padding:12px 14px; margin-bottom:14px}
+  .tareacaja b{display:block; font:700 10px/1.3 var(--cond); letter-spacing:.14em;
+               text-transform:uppercase; color:var(--gold-d); margin-bottom:3px}
+  .noent{min-height:36px; padding:8px 10px; background:#fff; border:1px solid var(--line);
+         border-radius:2px; color:var(--muted); cursor:pointer;
+         font:700 10px/1 var(--cond); letter-spacing:.1em; text-transform:uppercase; white-space:nowrap}
+  .noent.on{background:var(--bad); border-color:var(--bad); color:#fff}
+  .yacal{font:400 11px/1.4 var(--tech); color:var(--gold-d)}
+  .chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px}
+  .chip{padding:3px 8px; border-radius:2px; background:var(--gris); border:1px solid var(--line);
+        color:var(--muted-2); font:700 9px/1.5 var(--cond); letter-spacing:.1em; text-transform:uppercase}
+  .chip.ok{background:var(--navy); border-color:var(--navy); color:#fff}
+  .pond{display:inline-block; margin-left:6px; padding:1px 6px; border-radius:2px; background:var(--gold-bg);
+        color:var(--gold-d); font:700 9px/1.5 var(--cond); letter-spacing:.1em; text-transform:uppercase}
   .hoy{background:var(--gold-bg); border-top:3px solid var(--gold-d); padding:13px 15px}
   .hoy b{display:block; font:700 11px/1.3 var(--cond); letter-spacing:.14em;
          text-transform:uppercase; color:var(--gold-d); margin-bottom:3px}
@@ -276,6 +310,13 @@
       <div class="card" id="card-sesion" style="padding-bottom:12px">
         <label for="sel-sesion">Sesión</label>
         <select id="sel-sesion"></select>
+        <div class="acciones">
+          <button id="btn-corregir">Corregir un registro</button>
+          <button id="btn-agregar">Insertar sesión</button>
+        </div>
+        <div class="acciones">
+          <button id="btn-calif-tarea">Calificar la tarea de esta sesión</button>
+        </div>
       </div>
       <div id="plan-caja"></div>
       <div class="card" id="card-bitacora">
@@ -308,6 +349,47 @@
       <div id="aviso-clase"></div>
     </section>
 
+    <!-- CORREGIR -->
+    <section id="tab-corregir" class="oculto pila">
+      <div class="card">
+        <h3>Corregir un registro</h3>
+        <p class="muted" style="margin:2px 0 10px">Elige la clase que quedó mal.</p>
+        <div id="lista-registros"><p class="vacio">Cargando…</p></div>
+      </div>
+      <div id="editor" class="oculto pila"></div>
+      <div id="aviso-corregir"></div>
+      <button class="cta linea" id="btn-volver-clase">Volver</button>
+    </section>
+
+    <!-- AGREGAR SESIÓN -->
+    <section id="tab-agregar" class="oculto pila">
+      <div class="card">
+        <h3>Insertar una sesión</h3>
+        <p class="muted" style="margin:2px 0 12px">Para un repaso, un examen, o para completar un tema que no se alcanzó a dar.</p>
+        <div class="campo">
+          <label for="ag-donde">¿Dónde va?</label>
+          <select id="ag-donde"></select>
+        </div>
+        <div class="campo">
+          <button id="btn-continuacion" style="width:100%; min-height:42px; background:#fff;
+            border:1px solid var(--line); border-radius:2px; color:var(--navy); cursor:pointer;
+            font:700 11px/1.2 var(--cond); letter-spacing:.1em; text-transform:uppercase">
+            Es continuación de esa sesión</button>
+        </div>
+        <div class="campo"><label for="ag-tema">Tema</label>
+          <textarea id="ag-tema" placeholder="Repaso general antes del examen"></textarea></div>
+        <div class="campo"><label for="ag-objetivo">Objetivo</label>
+          <textarea id="ag-objetivo" placeholder="Qué debe poder hacer el alumno al salir"></textarea></div>
+        <div class="campo"><label for="ag-material">Material</label>
+          <input id="ag-material" type="text" placeholder="Opcional"></div>
+        <div class="campo"><label for="ag-tarea">Tarea</label>
+          <input id="ag-tarea" type="text" placeholder="Opcional"></div>
+      </div>
+      <div id="aviso-agregar"></div>
+      <button class="cta" id="btn-guardar-sesion">Insertar en el temario</button>
+      <button class="cta linea" id="btn-volver-clase2">Volver</button>
+    </section>
+
     <section id="exito" class="oculto">
       <div class="card exito">
         <img src="shield-color.png" alt="">
@@ -320,7 +402,7 @@
     <!-- ALUMNOS -->
     <section id="tab-alumnos" class="oculto">
       <div class="card"><h3>Cómo va cada alumno</h3>
-        <p class="muted" style="margin:2px 0 10px">En esta materia. Los que necesitan atención salen primero.</p>
+        <p class="muted" style="margin:2px 0 10px">En esta materia. Toca a un alumno para ver qué clases y tareas le faltan.</p>
         <div id="lista-como-van"><p class="vacio">Cargando…</p></div>
       </div>
     </section>
@@ -328,12 +410,14 @@
     <!-- CALIFICACIONES -->
     <section id="tab-calif" class="oculto pila">
       <div class="card">
-        <label for="sel-tipo">Tipo de evaluación</label>
-        <select id="sel-tipo">
-          <option>Examen parcial</option><option>Examen oficial</option>
-          <option>Trabajo / proyecto</option><option>Tarea</option>
-          <option>Participación</option><option>Diagnóstico</option>
-        </select>
+        <div class="campo">
+          <label for="sel-sesion-calif">¿Qué se está calificando?</label>
+          <select id="sel-sesion-calif"></select>
+        </div>
+        <div id="tarea-caja"></div>
+        <label for="sel-tipo">¿Qué rubro estás calificando?</label>
+        <select id="sel-tipo"></select>
+        <div id="chips-rubros" class="chips"></div>
       </div>
       <div class="card">
         <h3>Calificaciones</h3>
@@ -365,15 +449,15 @@
 </div>
 
 <script>
-var S = { maestro:'', materias:[], clave:'', datos:null, cubrio:'Sí', tab:'clase', asis:{}, enviando:false, forzar:false, sugerida:'', token:'', comoVan:null, solo:false };
+var S = { maestro:'', materias:[], clave:'', datos:null, cubrio:'Sí', tab:'clase', asis:{}, enviando:false, forzar:false, sugerida:'', token:'', comoVan:null, solo:false, califSesion:0, califTarea:'', califFilas:{}, califTodas:[] };
 
 function $(id){ return document.getElementById(id); }
 // ================= CONEXIÓN CON EL SHEET =================
-// Pega aquí el URL de tu implementación de Apps Script (termina en /exec)
+// URL de la implementación de Or Barak. Si vuelves a implementar con un URL nuevo, cámbialo aquí.
 var API_URL = 'https://script.google.com/macros/s/AKfycbwwf7g-2dS1I3EyQugckgnA2hjRreo8LhAx6CDbVhgT8BFWOFNcYKM1W5coKtuI5qpuQg/exec';
 
 // Debe ser IDÉNTICA a la APP_KEY del Apps Script.
-var APP_KEY = 'crh,eusa';
+var APP_KEY = 'crh,uesa';
 
 var OFFLINE = ['registrarSesion', 'registrarCalificaciones'];
 
@@ -432,7 +516,7 @@ var google = { script: { run: (function crear(ok, err){
   var o = {};
   o.withSuccessHandler = function(f){ return crear(f, err); };
   o.withFailureHandler = function(f){ return crear(ok, f); };
-  ['listaMaestros','entrar','reanudar','cerrarSesion','datosMateria','registrarSesion','registrarCalificaciones','agenda','alumnosMateria','registrarAsistencia'].forEach(function(fn){
+  ['listaMaestros','entrar','reanudar','cerrarSesion','datosMateria','registrarSesion','registrarCalificaciones','agenda','alumnosMateria','registrarAsistencia','ultimosRegistros','cargarRegistro','corregirRegistro','borrarRegistro','insertarSesion','detalleAlumno','califsDeSesion'].forEach(function(fn){
     o[fn] = function(){
       var args = Array.prototype.slice.call(arguments);
       api(fn, args).then(function(r){ if(ok) ok(r); }).catch(function(e){
@@ -513,17 +597,62 @@ function cargarComoVan(){
         datos.push('sin asistencia registrada');
       }
       if(a.promedio !== null) datos.push('promedio ' + a.promedio);
-      html += '<div class="al"><span class="luz ' + a.color + '"></span><div>' +
-              '<div class="nm">' + esc(a.nombre) + '</div>' +
+      var pond = a.ponderado ? '<span class="pond">ponderado ' + a.cubierto + '%</span>' : '';
+      html += '<div class="al" data-id="' + esc(a.id) + '"><span class="luz ' + a.color + '"></span>' +
+              '<div style="flex:1">' +
+              '<div class="nm">' + esc(a.nombre) + pond + '</div>' +
               '<div class="datos">' + esc(datos.join('  ·  ')) + '</div>' +
               (a.racha >= 2 ? '<span class="alerta">' + a.racha + ' faltas seguidas</span>' : '') +
+              '<div class="detalle oculto" id="det-' + esc(a.id) + '"></div>' +
               '</div></div>';
     });
     c.innerHTML = html;
+    Array.prototype.forEach.call(c.querySelectorAll('.al'), function(fila){
+      fila.onclick = function(){ verDetalle(fila.dataset.id); };
+    });
   }).withFailureHandler(function(e){
     S.comoVan = null;
     $('lista-como-van').innerHTML = '<div class="aviso err">' + esc(e.message) + '</div>';
   }).alumnosMateria(S.token, S.clave);
+}
+
+/** Abre el detalle de un alumno: qué clases faltó, con su objetivo y su tarea. */
+function verDetalle(id){
+  var caja = $('det-' + id);
+  if(!caja) return;
+  if(!caja.classList.contains('oculto')){ caja.classList.add('oculto'); return; }
+  caja.classList.remove('oculto');
+  if(caja.dataset.listo === '1') return;
+  caja.innerHTML = '<p class="muted" style="margin:0">Cargando…</p>';
+
+  google.script.run.withSuccessHandler(function(d){
+    caja.dataset.listo = '1';
+    var html = '';
+    if(!d.faltas.length){
+      html += '<h4>No ha faltado a ninguna clase</h4>';
+    } else {
+      html += '<h4>Clases que le faltan (' + d.faltas.length + ')</h4>';
+      d.faltas.forEach(function(f){
+        html += '<div class="falta"><div class="fh">' + esc(f.fecha) + ' · ' + esc(f.estado) +
+                (f.sesion ? ' · sesión ' + f.sesion : '') + '</div>' +
+                '<div class="ft">' + esc(f.tema) + '</div><dl>' +
+                (f.objetivo ? '<dt>Objetivo pendiente</dt><dd>' + esc(f.objetivo) + '</dd>' : '') +
+                (f.material ? '<dt>Material</dt><dd>' + esc(f.material) + '</dd>' : '') +
+                (f.tarea ? '<dt>Tarea que debe reponer</dt><dd>' + esc(f.tarea) + '</dd>' : '') +
+                '</dl></div>';
+      });
+    }
+    if(d.notas.length){
+      html += '<h4 style="margin-top:12px">Sus calificaciones</h4>';
+      d.notas.forEach(function(n){
+        html += '<div class="datos">' + esc(n.fecha) + ' · ' + esc(n.tipo) + ' · ' + n.calif +
+                (n.obs ? ' · ' + esc(n.obs) : '') + '</div>';
+      });
+    }
+    caja.innerHTML = html;
+  }).withFailureHandler(function(e){
+    caja.innerHTML = '<div class="aviso err">' + esc(e.message) + '</div>';
+  }).detalleAlumno(S.token, S.clave, id);
 }
 
 function cargarAgenda(){
@@ -624,11 +753,14 @@ Array.prototype.forEach.call(document.querySelectorAll('nav button'), function(b
     $('exito').classList.add('oculto');
     $('card-materia').classList.remove('oculto');
     if(S.solo && S.tab==='calif') S.tab = 'clase';
-    ['clase','alumnos','calif','temario','agenda'].forEach(function(t){ $('tab-'+t).classList.toggle('oculto', t!==S.tab); });
+    ['clase','alumnos','calif','temario','agenda','corregir','agregar'].forEach(function(t){
+      $('tab-'+t).classList.toggle('oculto', t!==S.tab); });
     $('btn-guardar').textContent = S.tab==='calif' ? 'Guardar calificaciones' : 'Registrar sesión';
     document.querySelector('.barra').classList.toggle('oculto',
-        S.tab==='temario' || S.tab==='agenda' || S.tab==='alumnos');
+        S.tab==='temario' || S.tab==='agenda' || S.tab==='alumnos' ||
+        S.tab==='corregir' || S.tab==='agregar');
     if(S.tab==='alumnos') cargarComoVan();
+    if(S.tab==='calif') llenarSesionCalif($('sel-sesion-calif').value || $('sel-sesion').value);
     pintarBarra();
     window.scrollTo(0,0);
   };
@@ -772,9 +904,19 @@ function pintarAlumnos(){
       html += '<button data-id="'+esc(a.id)+'" data-v="'+esc(e)+'"'+(i===0?' class="on"':'')+'>'+cortos[i]+'</button>';
     });
     cont.innerHTML += html + '</div></div>';
-    cal.innerHTML += '<div class="alumno" style="display:flex; align-items:center; justify-content:space-between; gap:12px">'+
-      '<div class="nm" style="margin:0">'+esc(a.nombre)+'</div>'+
+    cal.innerHTML += '<div class="alumno" style="display:flex; align-items:center; justify-content:space-between; gap:10px">'+
+      '<div style="flex:1"><div class="nm" style="margin:0">'+esc(a.nombre)+'</div>'+
+      '<div class="yacal" id="ya-'+esc(a.id)+'"></div></div>'+
+      '<button class="noent" data-id="'+esc(a.id)+'">No entregó</button>'+
       '<input class="calif" type="tel" inputmode="decimal" data-id="'+esc(a.id)+'" placeholder="—"></div>';
+  });
+  Array.prototype.forEach.call(cal.querySelectorAll('.noent'), function(b){
+    b.onclick = function(){
+      var inp = cal.querySelector('input[data-id="'+b.dataset.id+'"]');
+      var activo = b.classList.toggle('on');
+      if(activo){ inp.value = '0'; inp.disabled = true; }
+      else { inp.value = ''; inp.disabled = false; }
+    };
   });
   Array.prototype.forEach.call(cont.querySelectorAll('button'), function(b){
     b.onclick = function(){
@@ -814,6 +956,320 @@ function pintarTemario(){
       '<div class="muted">'+(dada ? 'Registrada el '+esc(dada) : (t.fecha ? 'Planeada para el '+esc(t.fecha) : 'Sin fecha planeada'))+'</div></div></li>';
   });
   c.innerHTML = html + '</ul>';
+}
+
+
+
+// ═════════ Corregir un registro ═════════
+function irA(tab){
+  S.tab = tab;
+  ['clase','alumnos','calif','temario','agenda','corregir','agregar'].forEach(function(t){
+    $('tab-'+t).classList.toggle('oculto', t!==tab); });
+  document.querySelector('.barra').classList.toggle('oculto',
+    tab==='temario' || tab==='agenda' || tab==='alumnos' || tab==='corregir' || tab==='agregar');
+  window.scrollTo(0,0);
+}
+
+$('btn-corregir').onclick = function(){
+  irA('corregir');
+  $('editor').classList.add('oculto');
+  aviso('aviso-corregir','','');
+  $('lista-registros').innerHTML = '<p class="vacio">Cargando…</p>';
+  google.script.run.withSuccessHandler(function(lista){
+    if(!lista.length){
+      $('lista-registros').innerHTML = '<p class="vacio">Todavía no hay registros de esta materia.</p>';
+      return;
+    }
+    var html = '';
+    lista.forEach(function(r){
+      html += '<button class="reg" data-fila="'+r.fila+'"><b>' +
+              (r.sesion ? 'Sesión '+r.sesion+' — ' : '') + esc(r.impartido || 'Sin tema') + '</b>' +
+              '<span>' + esc(r.fecha) + ' · ' + esc(r.maestro) +
+              (r.cubrio ? ' · plan: ' + esc(r.cubrio) : '') + '</span></button>';
+    });
+    $('lista-registros').innerHTML = html;
+    Array.prototype.forEach.call($('lista-registros').querySelectorAll('.reg'), function(b){
+      b.onclick = function(){ abrirEditor(Number(b.dataset.fila)); };
+    });
+  }).withFailureHandler(function(e){
+    $('lista-registros').innerHTML = '<div class="aviso err">'+esc(e.message)+'</div>';
+  }).ultimosRegistros(S.token, S.clave);
+};
+
+$('btn-volver-clase').onclick = function(){ irA('clase'); };
+$('btn-volver-clase2').onclick = function(){ irA('clase'); };
+
+function abrirEditor(fila){
+  $('editor').classList.remove('oculto');
+  $('editor').innerHTML = '<div class="card"><p class="muted" style="margin:0">Abriendo el registro…</p></div>';
+  google.script.run.withSuccessHandler(function(r){
+    S.editando = r;
+    var estados = ['Asistió','Retardo','Falta','Falta justificada'];
+    var cortos = ['Asistió','Retardo','Falta','Justif.'];
+    var html = '<div class="card"><h3>' + esc(r.fecha) + (r.sesion ? ' · sesión ' + r.sesion : '') + '</h3>' +
+      '<div class="campo" style="margin-top:12px"><label for="ed-impartido">Tema que sí dio</label>' +
+      '<textarea id="ed-impartido"></textarea></div>' +
+      '<div class="campo"><span class="etq">¿Dio el tema planeado?</span>' +
+      '<div class="seg si" id="ed-cubrio"><button data-v="Sí">Sí</button>' +
+      '<button data-v="Parcial">Parcial</button><button data-v="No">No</button></div></div>' +
+      '<div class="campo"><label for="ed-tarea">Tarea</label><input id="ed-tarea" type="text"></div>' +
+      '<div class="campo"><label for="ed-obs">Observaciones</label><textarea id="ed-obs"></textarea></div>' +
+      '</div><div class="card"><h3>Asistencia</h3><div id="ed-alumnos" style="margin-top:8px">';
+    r.asistencia.forEach(function(a){
+      html += '<div class="alumno"><div class="nm">' + esc(a.nombre) + '</div><div class="mini">';
+      estados.forEach(function(e,i){
+        html += '<button data-fila="'+a.fila+'" data-v="'+esc(e)+'"' +
+                (a.estado===e ? ' class="on"' : '') + '>'+cortos[i]+'</button>';
+      });
+      html += '</div></div>';
+    });
+    if(!r.asistencia.length) html += '<p class="vacio">Este registro no tiene asistencia guardada.</p>';
+    html += '</div></div>' +
+      '<button class="cta" id="ed-guardar">Guardar la corrección</button>' +
+      '<button class="cta linea" id="ed-borrar" style="border-color:#8C3A32; color:#8C3A32">Borrar este registro</button>';
+    $('editor').innerHTML = html;
+
+    $('ed-impartido').value = r.impartido;
+    $('ed-tarea').value = r.tarea;
+    $('ed-obs').value = r.obs;
+    S.edCubrio = r.cubrio || 'Sí';
+    Array.prototype.forEach.call($('ed-cubrio').children, function(b){
+      b.classList.toggle('on', b.dataset.v === S.edCubrio);
+      b.onclick = function(){
+        S.edCubrio = b.dataset.v;
+        Array.prototype.forEach.call($('ed-cubrio').children, function(x){ x.classList.remove('on'); });
+        b.classList.add('on');
+      };
+    });
+    S.edAsis = {};
+    r.asistencia.forEach(function(a){ S.edAsis[a.fila] = a.estado; });
+    Array.prototype.forEach.call($('ed-alumnos').querySelectorAll('button'), function(b){
+      b.onclick = function(){
+        S.edAsis[b.dataset.fila] = b.dataset.v;
+        Array.prototype.forEach.call(b.parentElement.children, function(x){ x.classList.remove('on'); });
+        b.classList.add('on');
+      };
+    });
+
+    $('ed-guardar').onclick = function(){
+      var lista = [];
+      for(var f in S.edAsis) lista.push({ fila: Number(f), estado: S.edAsis[f] });
+      this.disabled = true; this.textContent = 'Guardando…';
+      var btn = this;
+      google.script.run.withSuccessHandler(function(res){
+        btn.disabled = false; btn.textContent = 'Guardar la corrección';
+        aviso('aviso-corregir','ok', res.mensaje);
+        $('editor').classList.add('oculto');
+        S.comoVan = null;
+        cargarMateria(S.clave);
+      }).withFailureHandler(function(e){
+        btn.disabled = false; btn.textContent = 'Guardar la corrección';
+        aviso('aviso-corregir','err', e.message);
+      }).corregirRegistro({
+        token:S.token, fila:S.editando.fila, clave:S.clave,
+        sesion:S.editando.sesion, impartido:$('ed-impartido').value.trim(),
+        cubrio:S.edCubrio, tarea:$('ed-tarea').value.trim(), obs:$('ed-obs').value.trim(),
+        asistencia:lista
+      });
+    };
+
+    $('ed-borrar').onclick = function(){
+      if(!S.confirmaBorrar){
+        S.confirmaBorrar = true;
+        this.textContent = 'Toca otra vez para borrarlo';
+        return;
+      }
+      S.confirmaBorrar = false;
+      var btn = this; btn.disabled = true; btn.textContent = 'Borrando…';
+      google.script.run.withSuccessHandler(function(res){
+        btn.disabled = false; btn.textContent = 'Borrar este registro';
+        aviso('aviso-corregir','ok', res.mensaje);
+        $('editor').classList.add('oculto');
+        S.comoVan = null;
+        cargarMateria(S.clave);
+        $('btn-corregir').onclick();
+      }).withFailureHandler(function(e){
+        btn.disabled = false; btn.textContent = 'Borrar este registro';
+        aviso('aviso-corregir','err', e.message);
+      }).borrarRegistro(S.token, S.editando.fila, S.clave);
+    };
+  }).withFailureHandler(function(e){
+    $('editor').innerHTML = '<div class="aviso err">'+esc(e.message)+'</div>';
+  }).cargarRegistro(S.token, fila);
+}
+
+// ═════════ Agregar una sesión ═════════
+$('btn-agregar').onclick = function(){
+  irA('agregar');
+  aviso('aviso-agregar','','');
+  llenarDonde();
+};
+
+/** Llena el selector de posición: después de cuál sesión va la nueva. */
+function llenarDonde(){
+  var s = $('ag-donde');
+  var t = (S.datos && S.datos.temario) || [];
+  s.innerHTML = '<option value="0">Al principio, antes de la sesión 1</option>';
+  t.forEach(function(x){
+    var dada = S.datos.registradas[x.sesion] ? ' (ya dada)' : '';
+    s.innerHTML += '<option value="' + x.sesion + '">Después de la sesión ' + x.sesion +
+                   ' — ' + esc(x.tema) + dada + '</option>';
+  });
+  if(!t.length){
+    s.innerHTML = '<option value="0">Esta materia no tiene temario todavía</option>';
+    return;
+  }
+  // por default, justo después de la última sesión ya registrada
+  var ultima = 0;
+  t.forEach(function(x){ if(S.datos.registradas[x.sesion] && x.sesion > ultima) ultima = x.sesion; });
+  s.value = String(ultima || t[0].sesion);
+}
+
+$('btn-continuacion').onclick = function(){
+  var n = Number($('ag-donde').value);
+  var t = (S.datos && S.datos.temario) || [];
+  var base = null;
+  t.forEach(function(x){ if(x.sesion === n) base = x; });
+  if(!base){ aviso('aviso-agregar','info','Elige primero después de cuál sesión va.'); return; }
+  $('ag-tema').value = base.tema + ' — continuación';
+  $('ag-objetivo').value = base.objetivo || '';
+  $('ag-material').value = base.material || '';
+  $('ag-tarea').value = base.tarea || '';
+  aviso('aviso-agregar','info','Copié lo de la sesión ' + n + '. Ajústalo a lo que falta por dar.');
+};
+
+$('btn-guardar-sesion').onclick = function(){
+  var tema = $('ag-tema').value.trim();
+  if(!tema){ aviso('aviso-agregar','err','Ponle un tema a la sesión.'); return; }
+  var btn = this; btn.disabled = true; btn.textContent = 'Insertando…';
+  google.script.run.withSuccessHandler(function(r){
+    btn.disabled = false; btn.textContent = 'Insertar en el temario';
+    aviso('aviso-agregar','ok', r.mensaje);
+    ['ag-tema','ag-objetivo','ag-material','ag-tarea'].forEach(function(id){ $(id).value = ''; });
+    S.comoVan = null;
+    cargarMateria(S.clave);
+    setTimeout(llenarDonde, 900);
+  }).withFailureHandler(function(e){
+    btn.disabled = false; btn.textContent = 'Insertar en el temario';
+    aviso('aviso-agregar','err', e.message);
+  }).insertarSesion({
+    token:S.token, clave:S.clave, despues:Number($('ag-donde').value), tema:tema,
+    objetivo:$('ag-objetivo').value.trim(),
+    material:$('ag-material').value.trim(),
+    tarea:$('ag-tarea').value.trim()
+  });
+};
+
+
+
+// ═════════ Calificar la tarea de una sesión ═════════
+$('btn-calif-tarea').onclick = function(){
+  irA('calif');
+  llenarSesionCalif($('sel-sesion').value);
+};
+
+function llenarSesionCalif(preseleccion){
+  var s = $('sel-sesion-calif');
+  var t = (S.datos && S.datos.temario) || [];
+  s.innerHTML = '<option value="">Otra cosa (no es de una sesión)</option>';
+  t.forEach(function(x){
+    s.innerHTML += '<option value="' + x.sesion + '">Sesión ' + x.sesion + ' — ' + esc(x.tema) + '</option>';
+  });
+  if(preseleccion) s.value = String(preseleccion);
+  s.onchange = function(){ cambioSesionCalif(); };
+
+  llenarRubros();
+  cambioSesionCalif();
+}
+
+/** Los rubros salen de la hoja Lineamientos de esa materia; si no hay, van los de siempre. */
+function llenarRubros(){
+  var sel = $('sel-tipo');
+  var previo = sel.value;
+  var props = (S.datos && S.datos.rubros) || [];
+  sel.innerHTML = '';
+  if(props.length){
+    props.forEach(function(r){
+      sel.innerHTML += '<option value="' + esc(r.tipo) + '">' + esc(r.tipo) + ' · ' + r.peso + '%</option>';
+    });
+    sel.innerHTML += '<option disabled>──────────</option>';
+  }
+  ['Examen parcial','Examen oficial','Trabajo / proyecto','Tarea','Participación','Diagnóstico']
+    .forEach(function(x){
+      if(props.some(function(r){ return r.tipo === x; })) return;
+      sel.innerHTML += '<option value="' + x + '">' + x + '</option>';
+    });
+  if(previo) sel.value = previo;
+  if(!sel.value) sel.selectedIndex = 0;
+  sel.onchange = function(){ prefillRubro(); };
+}
+
+function cambioSesionCalif(){
+  var n = Number($('sel-sesion-calif').value);
+  S.califSesion = n || 0;
+  S.califTodas = [];
+  limpiarCalif();
+  $('chips-rubros').innerHTML = '';
+  if(!n){
+    $('tarea-caja').innerHTML = '';
+    S.califTarea = '';
+    return;
+  }
+  var base = null;
+  (S.datos.temario || []).forEach(function(x){ if(x.sesion === n) base = x; });
+  S.califTarea = (base && base.tarea) || '';
+  $('tarea-caja').innerHTML = '<div class="tareacaja"><b>Tarea que se dejó</b>' +
+    esc(S.califTarea || 'Esta sesión no tiene tarea capturada en el temario.') + '</div>';
+
+  google.script.run.withSuccessHandler(function(ya){
+    S.califTodas = ya || [];
+    pintarChips();
+    prefillRubro();
+  }).withFailureHandler(function(){}).califsDeSesion(S.token, S.clave, n);
+}
+
+/** Muestra qué rubros de esta sesión ya se calificaron. */
+function pintarChips(){
+  var vistos = {};
+  S.califTodas.forEach(function(r){ if(r.tipo) vistos[r.tipo] = (vistos[r.tipo] || 0) + 1; });
+  var html = '';
+  for(var t in vistos) html += '<span class="chip ok">' + esc(t) + ' · ' + vistos[t] + '</span>';
+  $('chips-rubros').innerHTML = html
+    ? html
+    : '<span class="chip">Nada calificado de esta sesión</span>';
+}
+
+/** Trae lo ya capturado del rubro seleccionado, para corregir en vez de duplicar. */
+function prefillRubro(){
+  limpiarCalif();
+  S.califFilas = {};
+  var tipo = $('sel-tipo').value;
+  S.califTodas.forEach(function(r){
+    if(r.tipo !== tipo) return;
+    S.califFilas[r.id] = r.fila;
+    var inp = $('lista-calif').querySelector('input[data-id="'+r.id+'"]');
+    var et = $('ya-' + r.id);
+    if(inp && r.calif !== '' && r.calif !== null){
+      inp.value = r.calif;
+      if(Number(r.calif) === 0 && r.obs && r.obs.indexOf('No entregó') >= 0){
+        var b = $('lista-calif').querySelector('.noent[data-id="'+r.id+'"]');
+        if(b){ b.classList.add('on'); inp.disabled = true; }
+      }
+    }
+    if(et) et.textContent = 'Ya calificado en ' + tipo + ' — si lo cambias, se corrige';
+  });
+}
+
+function limpiarCalif(){
+  Array.prototype.forEach.call($('lista-calif').querySelectorAll('input'), function(i){
+    i.value = ''; i.disabled = false;
+  });
+  Array.prototype.forEach.call($('lista-calif').querySelectorAll('.noent'), function(b){
+    b.classList.remove('on');
+  });
+  Array.prototype.forEach.call($('lista-calif').querySelectorAll('.yacal'), function(e){
+    e.textContent = '';
+  });
 }
 
 // ---------- Guardar ----------
@@ -893,7 +1349,16 @@ function guardarCalif(){
   var lista = [];
   Array.prototype.forEach.call($('lista-calif').querySelectorAll('input'), function(i){
     var v = i.value.trim();
-    if(v !== '') lista.push({ id:i.dataset.id, calif:v.replace(',', '.'), obs:'' });
+    if(v === '') return;
+    var b = $('lista-calif').querySelector('.noent[data-id="'+i.dataset.id+'"]');
+    var noEntrego = b && b.classList.contains('on');
+    var etiqueta = S.califSesion ? 'Sesión ' + S.califSesion + (S.califTarea ? ' — ' + S.califTarea : '') : '';
+    lista.push({
+      id: i.dataset.id,
+      calif: v.replace(',', '.'),
+      fila: (S.califFilas && S.califFilas[i.dataset.id]) || 0,
+      obs: noEntrego ? ('No entregó' + (etiqueta ? ' · ' + etiqueta : '')) : etiqueta
+    });
   });
   if(!lista.length){ aviso('aviso-calif','err','No capturaste ninguna calificación.'); return; }
   var mala = lista.filter(function(x){ var n=Number(x.calif); return isNaN(n) || n<0 || n>10; });
@@ -902,11 +1367,12 @@ function guardarCalif(){
   google.script.run.withSuccessHandler(function(r){
     libera('Guardar calificaciones');
     aviso('aviso-calif', r.ok?'ok':'err', r.mensaje);
-    if(r.ok) Array.prototype.forEach.call($('lista-calif').querySelectorAll('input'), function(i){ i.value=''; });
+    if(r.ok){ S.comoVan = null; cambioSesionCalif(); }
   }).withFailureHandler(function(e){
     libera('Guardar calificaciones'); aviso('aviso-calif','err', e.message);
   }).registrarCalificaciones({ token:S.token, clave:S.clave, tipo:$('sel-tipo').value,
-                               fecha:new Date().toISOString(), calificaciones:lista });
+                               fecha:new Date().toISOString(), sesion:S.califSesion || 0,
+                               tareaTexto:S.califTarea || '', calificaciones:lista });
 }
 </script>
 </body>
