@@ -12,6 +12,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Or Barak">
 <link rel="apple-touch-icon" href="icon-192.png">
+<script src="config.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;600;700&family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -211,6 +212,10 @@
   .chip{padding:3px 8px; border-radius:2px; background:var(--gris); border:1px solid var(--line);
         color:var(--muted-2); font:700 9px/1.5 var(--cond); letter-spacing:.1em; text-transform:uppercase}
   .chip.ok{background:var(--navy); border-color:var(--navy); color:#fff}
+  .verbanner{background:var(--bad); color:#fff; padding:11px 14px; font-size:13px; line-height:1.45}
+  .verbanner b{display:block; font:700 10px/1.3 var(--cond); letter-spacing:.14em;
+               text-transform:uppercase; margin-bottom:3px}
+  .verpie{text-align:center; font:400 11px/1.5 var(--tech); color:var(--muted-2); padding:4px 0 10px}
   .pond{display:inline-block; margin-left:6px; padding:1px 6px; border-radius:2px; background:var(--gold-bg);
         color:var(--gold-d); font:700 9px/1.5 var(--cond); letter-spacing:.1em; text-transform:uppercase}
   .hoy{background:var(--gold-bg); border-top:3px solid var(--gold-d); padding:13px 15px}
@@ -294,6 +299,7 @@
   </header>
 
   <main>
+    <div id="aviso-version"></div>
     <div id="aviso-hoy"></div>
     <div class="card" id="card-materia">
       <label for="sel-materia">Materia</label>
@@ -438,6 +444,7 @@
         <p class="muted" style="margin:2px 0 10px">Días sin clases, excursiones y eventos.</p>
         <div id="lista-agenda"><p class="vacio">Cargando…</p></div>
       </div>
+      <div class="verpie" id="verpie"></div>
     </section>
   </main>
 
@@ -453,15 +460,16 @@ var S = { maestro:'', materias:[], clave:'', datos:null, cubrio:'Sí', tab:'clas
 
 function $(id){ return document.getElementById(id); }
 // ================= CONEXIÓN CON EL SHEET =================
-// URL de la implementación de Or Barak. Si vuelves a implementar con un URL nuevo, cámbialo aquí.
-var API_URL = 'https://script.google.com/macros/s/AKfycbwwf7g-2dS1I3EyQugckgnA2hjRreo8LhAx6CDbVhgT8BFWOFNcYKM1W5coKtuI5qpuQg/exec';
+// El URL y la clave viven en config.js, que no se reemplaza al actualizar.
 
-// Debe ser IDÉNTICA a la APP_KEY del Apps Script.
-var APP_KEY = 'crh,uesa';
+var VERSION_APP = 'v14';
 
 var OFFLINE = ['registrarSesion', 'registrarCalificaciones'];
 
 function api(fn, args){
+  if(typeof API_URL === 'undefined' || typeof APP_KEY === 'undefined'){
+    return Promise.reject(new Error('Falta el archivo config.js con el URL y la clave. Súbelo a GitHub.'));
+  }
   return fetch(API_URL, {
     method: 'POST',
     body: JSON.stringify({ key: APP_KEY, fn: fn, args: args })
@@ -575,6 +583,27 @@ function abrirApp(r){
   S.sugerida = r.sugerida || '';
   cargarMateria(abrir);
   cargarAgenda();
+  revisarVersion(r.version);
+}
+
+/** Avisa si la pantalla y el Sheet no están en la misma versión. */
+function revisarVersion(backend){
+  var caja = $('aviso-version');
+  if(!backend){
+    caja.innerHTML = '<div class="verbanner"><b>Falta actualizar el Sheet</b>' +
+      'Esta pantalla es ' + VERSION_APP + ' y el Apps Script trae una versión anterior. ' +
+      'Pega el Codigo-API.gs nuevo y publica una versión nueva.</div>';
+    return;
+  }
+  if(backend !== VERSION_APP){
+    caja.innerHTML = '<div class="verbanner"><b>Versiones distintas</b>' +
+      'Pantalla ' + esc(VERSION_APP) + ' · Sheet ' + esc(backend) + '. ' +
+      'Actualiza el que esté atrasado antes de seguir usándola.</div>';
+    return;
+  }
+  caja.innerHTML = '';
+  var pie = $('verpie');
+  if(pie) pie.textContent = 'Or Barak · sistema ' + VERSION_APP;
 }
 
 function cargarComoVan(){
